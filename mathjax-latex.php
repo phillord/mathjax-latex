@@ -29,11 +29,12 @@ class MathJax{
     
         add_shortcode('mathjax', 
                   array(__CLASS__, 'mathjax_shortcode' ));
-
-        add_shortcode('nomathjax',
-                  array(__CLASS__, 'nomathjax_shortcode' ));
     
     }
+
+    add_shortcode('nomathjax',
+                  array(__CLASS__, 'nomathjax_shortcode' ));
+    
     add_shortcode('latex', 
                   array(__CLASS__, 'latex_shortcode' ));
 
