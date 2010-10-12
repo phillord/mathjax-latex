@@ -18,15 +18,21 @@ class MathJax{
 
   function init(){
     register_activation_hook(__FILE__, array(__CLASS__, 'mathjax_install'));
+    
     if (get_option('force_load')) {
+    
         self::$add_script = true;
+    
     }
+    
     else {
+    
         add_shortcode('mathjax', 
                   array(__CLASS__, 'mathjax_shortcode' ));
 
         add_shortcode('nomathjax',
                   array(__CLASS__, 'nomathjax_shortcode' ));
+    
     }
     add_shortcode('latex', 
                   array(__CLASS__, 'latex_shortcode' ));
@@ -37,9 +43,11 @@ class MathJax{
     add_action('wp_footer', 
                array(__CLASS__, 'unconditional'));
 
-    add_action('admin_menu', array(__CLASS__, 'mathjax_menu'));
+    if (get_option('wp_latex_enabled')) {
+        add_filter( 'the_content', array(__CLASS__, 'inline_to_shortcode' ) );
+    }
 
-    add_filter( 'the_content', array(__CLASS__, 'inline_to_shortcode' ) );
+    add_action('admin_menu', array(__CLASS__, 'mathjax_menu'));
 
     add_filter('plugin_action_links', array(__CLASS__, 'mathjax_settings_link'), 9, 2 );
   }
@@ -48,6 +56,13 @@ class MathJax{
     //registers default options
     add_option('force_load', FALSE);
     add_option('latex_syntax', 'inline');
+    //test for wp-latex here
+    if (method_exists('WP_LaTeX', 'init')) {
+        add_option('wp_latex_enabled', FALSE);
+    }
+    else {
+        add_option('wp_latex_enabled', TRUE);
+    }
   }
   
   function unconditional(){
@@ -166,6 +181,12 @@ class MathJax{
         else {
             update_option('force_load', FALSE);
         }
+        if ($_POST['wp_latex_enabled']) {
+            update_option('wp_latex_enabled', TRUE);
+        }
+        else {
+            update_option('wp_latex_enabled', FALSE);
+        }
         if ($_POST['latex_syntax'] != get_option('latex_syntax')) {
             update_option('latex_syntax', $_POST['latex_syntax']);
         }
@@ -189,6 +210,27 @@ class MathJax{
             <option value='inline' <?php if (get_option('latex_syntax') == 'inline') echo 'SELECTED'; ?>>Inline</option>
             <option value='display' <?php if (get_option('latex_syntax') == 'display') echo 'SELECTED'; ?>>Display</option>
           </select>
+      </td>
+      </tr>
+      <tr valign="middle">
+      <th scope="row">Use wp-latex syntax?<br/><font size="-2">Allows use of the $latex$ wp-latex syntax. Conflicts with wp-latex.</font></th>
+      <td><input type="checkbox" name="wp_latex_enabled" value="1"<?php 
+      if (method_exists('WP_LaTeX', 'init')) {
+        update_option('wp_latex_enabled', FALSE);
+        echo 'DISABLED';
+      }
+      if (get_option('wp_latex_enabled')) {
+        echo 'CHECKED';
+      }
+      //test for wp-latex
+      ?>/>
+      <?php
+        if (method_exists('WP_LaTeX', 'init')) {
+            echo '<br/>
+<font size="-2">Uninstall wp-latex to be able to use this syntax</font>
+';
+        }
+      ?>
       </td>
       </tr>
       </table>
