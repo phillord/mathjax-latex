@@ -17,12 +17,17 @@ class MathJax{
   static $block_script;
 
   function init(){
-    add_shortcode('mathjax', 
+    register_activation_hook(__FILE__, array(__CLASS__, 'mathjax_install'));
+    if (get_option('force_load')) {
+        self::$add_script = true;
+    }
+    else {
+        add_shortcode('mathjax', 
                   array(__CLASS__, 'mathjax_shortcode' ));
 
-    add_shortcode('nomathjax',
+        add_shortcode('nomathjax',
                   array(__CLASS__, 'nomathjax_shortcode' ));
-      
+    }
     add_shortcode('latex', 
                   array(__CLASS__, 'latex_shortcode' ));
 
@@ -32,9 +37,17 @@ class MathJax{
     add_action('wp_footer', 
                array(__CLASS__, 'unconditional'));
 
-    
+    add_action('admin_menu', array(__CLASS__, 'mathjax_menu'));
+
     add_filter( 'the_content', array(__CLASS__, 'inline_to_shortcode' ) );
 
+    add_filter('plugin_action_links', array(__CLASS__, 'mathjax_settings_link'), 9, 2 );
+  }
+
+  function mathjax_install() {
+    //registers default options
+    add_option('force_load', FALSE);
+    add_option('latex_syntax', 'inline');
   }
   
   function unconditional(){
@@ -63,7 +76,16 @@ class MathJax{
   function latex_shortcode($atts,$content)
   {
     self::$add_script = true;
-    return "\(" . $content . "\)";
+    //this gives us an optional "syntax" attribute, which defaults to "inline", but can also be "display"
+    extract(shortcode_atts(array(
+                'syntax' => get_option('latex_syntax'),
+            ), $atts));
+    if ($syntax == 'inline') {
+        return "\(" . $content . "\)";
+    }
+    else if ($syntax == 'display') {
+        return "\[" . $content . "\]";
+    }
   }
 
   function add_script(){
@@ -114,6 +136,68 @@ class MathJax{
     }
     
     return "[latex]{$matches[1]}[/latex]";
+  }
+
+  //add a link to settings on the plugin management page
+  function mathjax_settings_link( $links, $file ) {
+    if ($file == 'mathjax-latex/mathjax-latex.php' && function_exists('admin_url')) {
+        $settings_link = '<a href="' .admin_url('options-general.php?page=mathjax-latex.php').'">'. __('Settings') . '</a>';
+        array_unshift($links, $settings_link);
+    }
+    return $links;
+  }
+
+  function mathjax_menu() {
+    add_options_page('MathJax-Latex Plugin Options', 'MathJax-Latex Plugin', 'manage_options', 'mathjax-latex', array(__CLASS__, 'mathjax_plugin_options'));
+  }
+
+  function mathjax_plugin_options() {
+      if (!current_user_can('manage_options'))  {
+        wp_die( __('You do not have sufficient permissions to access this page.') );
+      }
+      echo '<div class="wrap" id="mathjax-latex-options">
+<h2>MathJax-Latex Plugin Options</h2>
+';
+    if ($_POST['mathjax_hidden'] == 'Y') {
+        //process form
+        if ($_POST['force_load']) {
+            update_option('force_load', TRUE);
+        }
+        else {
+            update_option('force_load', FALSE);
+        }
+        if ($_POST['latex_syntax'] != get_option('latex_syntax')) {
+            update_option('latex_syntax', $_POST['latex_syntax']);
+        }
+        echo '<p><i>Options updated</i></p>';   
+    }
+?>   
+      <form id="mathjax-latex" name="mathjax-latex" action="" method='POST'>
+      <input type="hidden" name="mathjax_hidden" value="Y">
+      <table class="form-table">
+      <tr valign="middle">
+      <th scope="row">Force Load<br/><font size="-2">Force MathJax javascript to be loaded on every post (Removes the need to use the &#91;mathjax&#93; shortcode).</font></th>
+      <td><input type="checkbox" name="force_load" value="1"<?php 
+      if (get_option('force_load')) {
+        echo 'CHECKED';
+      }
+      ?>/></td>
+      </tr>
+      <tr valign="middle">
+      <th scope="row">Default &#91;latex&#93; syntax attribute.<br/><font size='-2'>By default, the &#91;latex&#93; shortcode renders equations using the MathJax '<?php get_option('latex_syntax') ?>' syntax.</font></th>
+      <td><select name='latex_syntax'>
+            <option value='inline' <?php if (get_option('latex_syntax') == 'inline') echo 'SELECTED'; ?>>Inline</option>
+            <option value='display' <?php if (get_option('latex_syntax') == 'display') echo 'SELECTED'; ?>>Display</option>
+          </select>
+      </td>
+      </tr>
+      </table>
+      <p class="submit">
+      <input type="submit" class="button-primary" value="<?php _e('Save Changes') ?>" />
+      </p>
+      </form>
+      </div>
+<?php
   }
 
 }
