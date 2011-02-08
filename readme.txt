@@ -1,10 +1,10 @@
 === MathJax-LaTeX ===
 
 Contributors: philliplord, sjcockell, knowledgeblog, d_swan
-Tags: mathematics, math, latex, mathml, mathjax
+Tags: mathematics, math, latex, mathml, mathjax, science
 Requires at least: 3.0
-Tested up to: 3.0.1
-Stable tag: 0.1
+Tested up to: 3.0.5
+Stable tag: 0.2
 
 This plugin enables mathjax (http://www.mathjax.org) functionality for WordPress (http://www.wordpress.org).
 
@@ -31,14 +31,20 @@ specified as with wp-latex but will be ignored. This means that mathjax-latex
 should be a drop in replacement for wp-latex. 
 
 You can also specify [nomathjax] -- this will block mathjax on the
-current page, regardless of other tags. 
+current page, regardless of other tags.
+
+The MathJax library is included in the plugin zip.
 
 == Installation ==
 
 1. Unzip the downloaded .zip archive to the `/wp-content/plugins/` directory
-1. Download the MathJax Javascript library (http://www.mathjax.org/download/)
-1. Place the Javascript library in the mathjax-latex directory (`/wp-content/plugins/mathjax-latex/**MathJax**`)
 1. Activate the plugin through the 'Plugins' menu in WordPress
+1. You can configure the plugin to load MathJax from a different URL to the default. See the options page.
+
+== Changelog ==
+
+1. MathJax.js can be loaded form a configurable URL. Defaults to $PLUGIN/MathJax/MathJax.js
+1. MathJax is now included in the plugin distribution.
 
 == Copyright ==
 

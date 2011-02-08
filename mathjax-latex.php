@@ -1,28 +1,14 @@
 <?php
   /*
    Plugin Name: Mathjax Latex
-   Plugin URI: http://knowledgeblog.org/mathjax-latex-wordpress-plugin/
-   Description: Transform latex equations in javascript using MathJax
-   Version: 0.1
+   Description: Transform latex equations in javascript using mathjax
+   Version: 0.2
    Author: Phillip Lord
    Author URI: http://knowledgeblog.org
-   License: GPL2
-
+   
    Copyright 2010. Phillip Lord (phillip.lord@newcastle.ac.uk)
    Newcastle University. 
-  
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License, version 2, as 
-   published by the Free Software Foundation.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software
-   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+   
   */
 
 
@@ -71,6 +57,7 @@ class MathJax{
     //registers default options
     add_option('force_load', FALSE);
     add_option('latex_syntax', 'inline');
+    add_option('mathjax_location', plugins_url("MathJax/MathJax.js",__FILE__));
     //test for wp-latex here
     if (method_exists('WP_LaTeX', 'init')) {
         add_option('wp_latex_enabled', FALSE);
@@ -118,15 +105,17 @@ class MathJax{
     }
   }
 
-  function add_script(){
+function add_script(){
     if( !self::$add_script )
       return;
     
     if( self::$block_script )
       return;
+    
+    $mathjax_location = get_option('mathjax_location');
 
     wp_register_script( 'mathjax', 
-                        plugins_url('MathJax/MathJax.js',__FILE__),
+                        $mathjax_location,
                         false, null, true );
 
     wp_print_scripts( 'mathjax' );
@@ -185,6 +174,10 @@ class MathJax{
       if (!current_user_can('manage_options'))  {
         wp_die( __('You do not have sufficient permissions to access this page.') );
       }
+      //initialise option for existing MathJax-LaTeX users
+      if (!get_option('mathjax_location')) {
+        add_option('mathjax_location', plugins_url("MathJax/MathJax.js",__FILE__));
+      }
       echo '<div class="wrap" id="mathjax-latex-options">
 <h2>MathJax-Latex Plugin Options</h2>
 ';
@@ -205,10 +198,33 @@ class MathJax{
         if ($_POST['latex_syntax'] != get_option('latex_syntax')) {
             update_option('latex_syntax', $_POST['latex_syntax']);
         }
+        if ($_POST['default_disabled']) {
+            update_option('default_disabled', true);
+            if ($_POST['mathjax_location'] != get_option('mathjax_location')) {
+                update_option('mathjax_location', $_POST['mathjax_location']);
+            }
+        }
+        else {
+            update_option('default_disabled', false);
+            update_option('mathjax_location', plugins_url("MathJax/MathJax.js",__FILE__));
+         }
+            //$url = plugins_url($_POST['mathjax_location']."/MathJax.js",__FILE__);
+            //$handle = @fopen($url,'r');
+            //if($handle !== false){
+                //update_option('mathjax_location', $_POST['mathjax_location']);
+                //$exists = true;
+            //}
+            //else{
+                //$exists = false;
+            //}
+        //}
+        //else {
+            //$exists = true;
+        //}
         echo '<p><i>Options updated</i></p>';   
     }
 ?>   
-      <form id="mathjax-latex" name="mathjax-latex" action="" method='POST'>
+      <form id="mathjaxlatex" name="mathjaxlatex" action="" method='POST'>
       <input type="hidden" name="mathjax_hidden" value="Y">
       <table class="form-table">
       <tr valign="middle">
@@ -247,6 +263,19 @@ class MathJax{
         }
       ?>
       </td>
+      </tr>
+      <tr>
+        <th>Override default MathJax location?</th>
+        <td><input type="checkbox" name="default_disabled" value="1"<?php 
+            if (get_option('default_disabled')) {
+                echo 'CHECKED';
+            }
+      ?>/>
+      </td>
+      </tr>
+      <tr>
+        <th scope="row">MathJax Javascript location<br/><font size="-2">Changes will be ignored unless above is checked.</font></th>
+        <td><input type='textbox' name='mathjax_location' class='regular-text code' value='<?php echo get_option('mathjax_location'); ?>'/></td>
       </tr>
       </table>
       <p class="submit">
