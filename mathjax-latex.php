@@ -59,6 +59,7 @@ class MathJax{
     add_option('latex_syntax', 'inline');
     add_option('mathjax_location', plugins_url("MathJax/MathJax.js",__FILE__));
     //test for wp-latex here
+    // Change to is_plugin_active call!
     if (method_exists('WP_LaTeX', 'init')) {
         add_option('wp_latex_enabled', FALSE);
     }
