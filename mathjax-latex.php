@@ -112,6 +112,10 @@ function add_script(){
     if( self::$block_script )
       return;
     
+    //initialise option for existing MathJax-LaTeX users
+    if (!get_option('mathjax_location')) {
+      add_option('mathjax_location', plugins_url("MathJax/MathJax.js",__FILE__));
+    }
     $mathjax_location = get_option('mathjax_location');
 
     wp_register_script( 'mathjax', 
