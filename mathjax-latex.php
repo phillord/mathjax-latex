@@ -40,6 +40,7 @@ class MathJax{
     add_action('admin_menu', array(__CLASS__, 'mathjax_menu'));
     add_filter('plugin_action_links', array(__CLASS__, 'mathjax_settings_link'), 9, 2 );
     add_action('admin_print_scripts-settings_page_mathjax-latex', array(__CLASS__, 'mathjax_admin_js'));
+    add_action('admin_notices', array(__CLASS__, 'mathjax_warning'));
   }
 
   function mathjax_install() {
@@ -123,7 +124,16 @@ function add_script(){
         if (!get_option('mathjax_config')) {
             add_option('mathjax_config', 'default');
         }
-        $mathjax_location = get_option('mathjax_location')."?config=".get_option('mathjax_config');
+        $config_file = get_option('mathjax_location');
+        $config_file = str_replace('MathJax.js', 'config/'.get_option('mathjax_config').'.js', $config_file);
+        if (fopen($config_file, 'r')) {
+            $mathjax_location = get_option('mathjax_location')."?config=".get_option('mathjax_config');
+            
+        }
+        else {
+            $mathjax_location = get_option('mathjax_location');
+        }
+
     }
     wp_register_script( 'mathjax', 
                         $mathjax_location,
@@ -342,6 +352,15 @@ function add_script(){
   }
   function mathjax_admin_js() {
     wp_enqueue_script('pluginscript', plugins_url('js/admin.js', __FILE__));
+  }
+  function mathjax_warning() {
+    $config_file = get_option('mathjax_location');
+    $config_file = str_replace('MathJax.js', 'config/'.get_option('mathjax_config').'.js', $config_file);
+    if (!get_option('use_cdn')) {
+    if (!fopen($config_file, 'r')) {
+        echo "<div id='message' class='error'><p>It appears you are running MathJax v1.0.1, you should consider <a href='http://www.mathjax.org/download/'>upgrading to v1.1</a>, or using the <a href='http://www.mathjax.org/docs/1.1/start.html#mathjax-cdn'>MathJax Content Distribution Network</a>. See the <a href='options-general.php?page=mathjax-latex'>plugin options page</a>.</p></div>";
+    }
+    }
   }
 
 }
