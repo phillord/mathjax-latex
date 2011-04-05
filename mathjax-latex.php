@@ -18,39 +18,28 @@ class MathJax{
 
   function init(){
     register_activation_hook(__FILE__, array(__CLASS__, 'mathjax_install'));
-    
+    register_deactivation_hook(__FILE__, array(__CLASS__, 'mathjax_uninstall'));
     if (get_option('force_load')) {
-    
         self::$add_script = true;
-    
     }
-    
     else {
-    
         add_shortcode('mathjax', 
                   array(__CLASS__, 'mathjax_shortcode' ));
-    
     }
-
     add_shortcode('nomathjax',
                   array(__CLASS__, 'nomathjax_shortcode' ));
-    
     add_shortcode('latex', 
                   array(__CLASS__, 'latex_shortcode' ));
-
     add_action('wp_footer', 
                array(__CLASS__, 'add_script'));
-    
     add_action('wp_footer', 
                array(__CLASS__, 'unconditional'));
-
     if (get_option('wp_latex_enabled')) {
         add_filter( 'the_content', array(__CLASS__, 'inline_to_shortcode' ) );
     }
-
     add_action('admin_menu', array(__CLASS__, 'mathjax_menu'));
-
     add_filter('plugin_action_links', array(__CLASS__, 'mathjax_settings_link'), 9, 2 );
+    add_action('admin_print_scripts-settings_page_mathjax-latex', array(__CLASS__, 'mathjax_admin_js'));
   }
 
   function mathjax_install() {
@@ -59,13 +48,23 @@ class MathJax{
     add_option('latex_syntax', 'inline');
     add_option('mathjax_location', plugins_url("MathJax/MathJax.js",__FILE__));
     //test for wp-latex here
-    // Change to is_plugin_active call!
     if (method_exists('WP_LaTeX', 'init')) {
         add_option('wp_latex_enabled', FALSE);
     }
     else {
         add_option('wp_latex_enabled', TRUE);
     }
+    add_option('mathjax_config', 'default');
+    add_option('use_cdn', false);
+  }
+
+  function mathjax_uninstall() {
+    delete_option('force_load');
+    delete_option('latex_syntax');
+    delete_option('mathjax_location');
+    delete_option('wp_latex_enabled');
+    delete_option('mathjax_config');
+    delete_option('use_cdn');
   }
   
   function unconditional(){
@@ -114,11 +113,18 @@ function add_script(){
       return;
     
     //initialise option for existing MathJax-LaTeX users
-    if (!get_option('mathjax_location')) {
-      add_option('mathjax_location', plugins_url("MathJax/MathJax.js",__FILE__));
+    if (get_option('use_cdn')) {
+        $mathjax_location = "http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
     }
-    $mathjax_location = get_option('mathjax_location');
-
+    else {
+        if (!get_option('mathjax_location')) {
+            add_option('mathjax_location', plugins_url("MathJax/MathJax.js",__FILE__));
+        }
+        if (!get_option('mathjax_config')) {
+            add_option('mathjax_config', 'default');
+        }
+        $mathjax_location = get_option('mathjax_location')."?config=".get_option('mathjax_config');
+    }
     wp_register_script( 'mathjax', 
                         $mathjax_location,
                         false, null, true );
@@ -203,16 +209,23 @@ function add_script(){
         if ($_POST['latex_syntax'] != get_option('latex_syntax')) {
             update_option('latex_syntax', $_POST['latex_syntax']);
         }
-        if ($_POST['default_disabled']) {
-            update_option('default_disabled', true);
-            if ($_POST['mathjax_location'] != get_option('mathjax_location')) {
-                update_option('mathjax_location', $_POST['mathjax_location']);
-            }
+        if ($_POST['use_cdn']) {
+            update_option('use_cdn', true);
         }
         else {
-            update_option('default_disabled', false);
-            update_option('mathjax_location', plugins_url("MathJax/MathJax.js",__FILE__));
-         }
+            update_option('use_cdn', false);
+            if ($_POST['default_disabled']) {
+                update_option('default_disabled', true);
+                if ($_POST['mathjax_location'] != get_option('mathjax_location')) {
+                    update_option('mathjax_location', $_POST['mathjax_location']);
+                }
+            }
+            else {
+                update_option('default_disabled', false);
+                update_option('mathjax_location', plugins_url("MathJax/MathJax.js",__FILE__));
+            }
+            update_option('mathjax_config', $_POST['mathjax_config']);
+        }
             //$url = plugins_url($_POST['mathjax_location']."/MathJax.js",__FILE__);
             //$handle = @fopen($url,'r');
             //if($handle !== false){
@@ -270,18 +283,55 @@ function add_script(){
       </td>
       </tr>
       <tr>
+        <th>Use MathJax CDN Service?<br/><font size="-2">Allows use of the MathJax hosted content distribution network Javascript. By using this, you are agreeing to these <a href='http://www.mathjax.org/download/mathjax-cdn-terms-of-service/'>Terms of Service</a>.<br/>Ignore all following options.</font></th>
+        <td><input type="checkbox" name="use_cdn" id="use_cdn" value="1" onchange="change_state()" <?php
+            if (get_option('use_cdn')) {
+                echo 'CHECKED';
+            }
+      ?>/>
+      </tr>
+      <tr>
         <th>Override default MathJax location?</th>
         <td><input type="checkbox" name="default_disabled" value="1"<?php 
             if (get_option('default_disabled')) {
                 echo 'CHECKED';
+            }
+            if (get_option('use_cdn')) {
+                echo ' DISABLED';
             }
       ?>/>
       </td>
       </tr>
       <tr>
         <th scope="row">MathJax Javascript location<br/><font size="-2">Changes will be ignored unless above is checked.</font></th>
-        <td><input type='textbox' name='mathjax_location' class='regular-text code' value='<?php echo get_option('mathjax_location'); ?>'/></td>
+        <td><input type='textbox' name='mathjax_location' class='regular-text code' value='<?php echo get_option('mathjax_location'); ?>'
+       <?php 
+            if (get_option('use_cdn')) {
+                echo ' DISABLED';
+            }
+        ?>
+        /></td>
       </tr>
+      <tr>
+        <th>Config<br/><font size='-2'>Select the config you want MathJax to use. An explaination is available in the <a href='http://www.mathjax.org/docs/1.1/options/index.html'>MathJax docs</a>.</font></th>
+        <td>
+        <select name='mathjax_config' <?php if (get_option('use_cdn')) echo 'DISABLED';?>>
+        <option value='default' 
+        <?php if (get_option('mathjax_config') == 'default') echo 'SELECTED'?>
+>default</option>
+        <option value='Accessible'
+        <?php if (get_option('mathjax_config') == 'Accessible') echo 'SELECTED'?>
+>Accessible</option>
+        <option value='TeX-AMS_HTML'
+        <?php if (get_option('mathjax_config') == 'TeX-AMS_HTML') echo 'SELECTED'?>
+>TeX-AMS_HTML</option>
+        <option value='TeX-AMS-MML_HTMLorMML'
+        <?php if (get_option('mathjax_config') == 'TeX-AMS-MML_HTMLorMML') echo 'SELECTED'?>
+>TeX-AMS-MML_HTMLorMML</option>
+        </select>
+        </td>
+      </tr>
+
       </table>
       <p class="submit">
       <input type="submit" class="button-primary" value="<?php _e('Save Changes') ?>" />
@@ -289,6 +339,9 @@ function add_script(){
       </form>
       </div>
 <?php
+  }
+  function mathjax_admin_js() {
+    wp_enqueue_script('pluginscript', plugins_url('js/admin.js', __FILE__));
   }
 
 }
