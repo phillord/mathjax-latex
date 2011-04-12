@@ -2,11 +2,12 @@
   /*
    Plugin Name: Mathjax Latex
    Description: Transform latex equations in javascript using mathjax
-   Version: 0.2
-   Author: Phillip Lord
+   Version: 1.0
+   Author: Phillip Lord, Simon Cockell
    Author URI: http://knowledgeblog.org
    
    Copyright 2010. Phillip Lord (phillip.lord@newcastle.ac.uk)
+   Simon Cockell (s.j.cockell@newcastle.ac.uk)
    Newcastle University. 
    
   */
