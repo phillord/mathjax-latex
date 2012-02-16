@@ -205,7 +205,7 @@ function add_script(){
 ';
     if ($_POST['mathjax_hidden'] == 'Y') {
         //process form
-        if ($_POST['force_load']) {
+        if (array_key_exists( "force_load", $_POST)){
             update_option('force_load', TRUE);
         }
         else {
@@ -358,9 +358,9 @@ function add_script(){
     $config_file = get_option('mathjax_location');
     $config_file = str_replace('MathJax.js', 'config/'.get_option('mathjax_config').'.js', $config_file);
     if (!get_option('use_cdn')) {
-    if (!fopen($config_file, 'r')) {
-        echo "<div id='message' class='error'><p>It appears you are running MathJax v1.0.1, you should consider <a href='http://www.mathjax.org/download/'>upgrading to v1.1</a>, or using the <a href='http://www.mathjax.org/docs/1.1/start.html#mathjax-cdn'>MathJax Content Distribution Network</a>. See the <a href='options-general.php?page=mathjax-latex'>plugin options page</a>.</p></div>";
-    }
+        if (!fopen($config_file, 'r')) {
+            echo "<div id='message' class='error'><p>It appears you are running MathJax v1.0.1, you should consider <a href='http://www.mathjax.org/download/'>upgrading to v1.1</a>, or using the <a href='http://www.mathjax.org/docs/1.1/start.html#mathjax-cdn'>MathJax Content Distribution Network</a>. See the <a href='options-general.php?page=mathjax-latex'>plugin options page</a>.</p></div>";
+        }
     }
   }
 
