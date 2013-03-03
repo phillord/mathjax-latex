@@ -3,10 +3,12 @@
 Contributors: philliplord, sjcockell, knowledgeblog, d_swan
 Tags: mathematics, math, latex, mathml, mathjax, science, res-comms, scholar, academic
 Requires at least: 3.0
-Tested up to: 3.1
+Tested up to: 3.5.1
 Stable tag: 1.0
 
-This plugin enables mathjax (http://www.mathjax.org) functionality for WordPress (http://www.wordpress.org). Version 1.0 is compatible with MathJax 1.1 and the CDN.
+This plugin enables mathjax (http://www.mathjax.org) functionality for
+WordPress (http://www.wordpress.org). Version 1.0 is compatible with MathJax
+1.1 and the CDN.
 
 == Description ==
 
@@ -43,13 +45,20 @@ current page, regardless of other tags.
 == Installation ==
 
 1. Unzip the downloaded .zip archive to the `/wp-content/plugins/` directory
-1. Download the MathJax Javascript library (http://www.mathjax.org/download/)
-1. Place the Javascript library in the mathjax-latex directory (`/wp-content/plugins/mathjax-latex/MathJax`)
 1. Activate the plugin through the 'Plugins' menu in WordPress
+1. This uses the mathjax
+   CDN(<http://www.mathjax.org/docs/1.1/start.html#mathjax-cdn>). Alternatively:
+1. Download the MathJax Javascript library (http://www.mathjax.org /download/)
+1. Place the Javascript library in the mathjax-latex directory (`/wp-content/plugins/mathjax-latex/MathJax`)
 1. You can configure the plugin to load MathJax from a different URL to the default. See the options page.
-1. Alternatively you can use the MathJax Content Distribution Network (<http://www.mathjax.org/docs/1.1/start.html#mathjax-cdn>) to deliver the Javascript, just tick the relevant box on the options page.
+
 
 == Changelog ==
+
+= 1.1 = 
+1. Documentation update
+1. Update test-with documentation for WordPress 3.5.1
+1. Tested against MathJax2.1
 
 = 1.0 =
 1. Compatibility with MathJax 1.1. Load a default configuration from the MathJax distribution.
@@ -60,8 +69,13 @@ current page, regardless of other tags.
 
 == Upgrade Notice ==
 
+= 1.1 = 
+Documentation updates only. Upgrade for existing users is optional. 
+
 = 1.0 =
-The 1.0 release offers compatibility with MathJax 1.1, and enables use of the CDN for javascript delivery. Upgrading is strongly recommended.
+
+The 1.0 release offers compatibility with MathJax 1.1, and enables use of the
+CDN for javascript delivery. Upgrading is strongly recommended.
 
 == Copyright ==
 
