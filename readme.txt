@@ -7,8 +7,7 @@ Tested up to: 3.5.1
 Stable tag: 1.1
 
 This plugin enables mathjax (http://www.mathjax.org) functionality for
-WordPress (http://www.wordpress.org). Version 1.0 is compatible with MathJax
-1.1 and the CDN.
+WordPress (http://www.wordpress.org). 
 
 == Description ==
 
@@ -19,7 +18,7 @@ mathjax is not loaded for all pages, which will otherwise slow loading down.
 
 The MathJax javascript can be delivered from your own server, or you can
 utilise the [MathJax Content Distribution Network (CDN)]
-(http://www.mathjax.org/docs/1.1/start.html#mathjax-cdn), which is the preferred
+(http://www.mathjax.org/docs/latest/start.html#mathjax-cdn), which is the preferred
 mechanism as it offers increased speed and stability over hosting the Javascript
 and configuring the library yourself. Use of the CDN is governed by these
 [Terms of Service](http://www.mathjax.org/download/mathjax-cdn-terms-of-service/).
