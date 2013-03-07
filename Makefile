@@ -1,12 +1,9 @@
 
-include ../../publish/makefile_conf.inc
-
-
-DIR=../mathjax-latex/
 VERSION=0.1
-FILES=$(DIR)MathJax/ $(DIR)mathjax-latex.php $(DIR)license.txt\
-	$(DIR)readme.txt 
+FILES=mathjax-latex.php license.txt COPYING readme.txt js
+CP=cp -r
 
+SVN_WORK = $(HOME)/subversion-repo/wordpress-updateable/mathjax-latex/trunk
 
 all:
 	$(MAKE) -C .. mathjax-latex fix_perm
@@ -26,4 +23,6 @@ test: all
 	- rm index.html
 	wget http://yarm.ncl.ac.uk
 
-include ../../publish/fix_perm.inc
+
+svn-publish: 
+	$(CP) $(FILES) $(SVN_WORK)
