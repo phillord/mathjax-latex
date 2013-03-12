@@ -32,42 +32,47 @@ class mathjax_latex_admin{
                           array($this, "plugin_options_menu")
                           );
     }
-    
+
     function plugin_options_menu(){
-        
+
         if( !current_user_can('manage_options')){
             wp_die( __("You do not have sufficient permissions to access this page."));
         }
-        
-        
-        if ( !wp_verify_nonce( $_POST[ "kblog_mathjax_latex_field"],
-                               "kblog_mathjax_latex_title")){
-            $this->admin_save();
-        }
-        
-        $nonce = wp_nonce_field( "kblog_mathjax_latex_field",
-                                 "kblog_mathjax_latex_title",
+
+
+        $nonce = wp_nonce_field( "kblog_mathjax_latex_save_action",
+                                 "kblog_mathjax_latex_save_field",
                                  true, false );
 
-        
+
         $this->table_head( $nonce );
 
+        // save options if this is a valid post
+        if ( wp_verify_nonce( $_POST[ "kblog_mathjax_latex_save_field"],
+                              "kblog_mathjax_latex_save_action")){
+            echo "<i>Options Updated</i>\n";
+            $this->admin_save();
+        }
+
+
+
+
         $checked_force_load = "";
-        
+
         if(get_option( 'kblog_mathjax_force_load')){
             $checked_force_load = "checked=\"true\"";
         }
-        
+
         $this->admin_table_row
             (
              "Force Load",
              "Force MathJax javascript to be loaded on every post (Removes the need to use the [mathjax] shortcode).",
              "<input type=\"checkbox\" name=\"kblog_mathjax_force_load\" value=\"1\" $checked_force_load />"
              );
-    
-        $selected_inline = get_option( "kblog_mathjax_latex_inline" ) == "inline" ? 
+
+        $selected_inline = get_option( "kblog_mathjax_latex_inline" ) == "inline" ?
             "selected=\"true\"" :"";
-        $selected_display = get_option( "kblog_mathjax_latex_inline" ) == "display"? 
+        $selected_display = get_option( "kblog_mathjax_latex_inline" ) == "display"?
             "selected=\"true\"" :"";
 
 
@@ -84,14 +89,14 @@ EOT;
               $syntax_input
               );
 
-        $wp_latex_disabled = method_exists('WP_LaTeX','init') ? 
+        $wp_latex_disabled = method_exists('WP_LaTeX','init') ?
             "disabled='true'" : "";
-        $wp_latex_disabled_warning = method_exists('WP_LaTeX','init') ? 
+        $wp_latex_disabled_warning = method_exists('WP_LaTeX','init') ?
             "Disable wp-latex to use this syntax." : "";
-        
+
         $use_wp_latex_syntax = get_option( "kblog_mathjax_use_wplatex_syntax", false ) ?
             "checked='true'" : "";
-        
+
         $this->admin_table_row
             ("Use wp-latex syntax?",
              "Allows use of the $latex $ syntax, but conflicts with wp-latex. $wp_latex_disabled_warning",
@@ -101,11 +106,11 @@ EOT;
 
         $use_cdn = get_option( 'kblog_mathjax_use_cdn', true ) ?
             "checked=\"true\"" : "";
-        
+
         $this->admin_table_row
             ( "Use MathJax CDN Service?",
               "Allows use of the MathJax hosted contet delivery network." .
-              "By using this, you are agreeing to these " . 
+              "By using this, you are agreeing to these " .
               "<a href='http://www.mathjax.org/download/mathjax-cdn-terms-of-service/'>Terms of Service</a>.",
               "<input type=\"checkbox\" name=\"kblog_mathjax_use_cdn\" id=\"use_cdn\" value=\"1\" ".
               "$use_cdn/>"
@@ -116,49 +121,50 @@ EOT;
             "disabled=\"true\"" : "";
         $custom_location = "value='" . get_option( 'kblog_mathjax_custom_location', "" )
             . "'";
-        
-        
+
+
 
         $this->admin_table_row
             ("Custom MathJax location?",
              "If you are not using the CDN",
              "<input type='textbox' name='mathjax_location' $custom_location $custom_location_disabled>"
              );
-        
-        
+
+
         $options = array();
         $options[] = "default";
         $options[] = "Accessible";
         $options[] = "TeX-AMS_HTML";
         $options[] = "TeX-AMS-MML_HTMLorMML";
-            
-        
+
+
         $select_string = "<select name='kblog_mathjax_config'>\n";
-        
+
         foreach( $options as $i ){
             $selected = $i== get_option( "kblog_mathjax_config", "default" ) ?
                 "selected='true'" : "";
             $select_string .= "<option value='$i' $selected>$i</option>\n";
         }
-        
+
         $select_string .= "</select>";
-        
+
         $this->admin_table_row
-            ( "MathJax Configuration", 
+            ( "MathJax Configuration",
               "See MathJax documentation for details",
               $select_string );
-        
+
         $this->table_foot();
-        
+
 
     }
 
     function admin_save(){
-        
+
+
         update_option('kblog_mathjax_force_load',
                        array_key_exists("kblog_mathjax_force_load",$_POST));
-        
-        
+
+
         if(array_key_exists("kblog_mathjax_latex_inline",$_POST)){
             update_option("kblog_mathjax_latex_inline",$_POST['kblog_mathjax_latex_inline']);
         }
@@ -166,15 +172,15 @@ EOT;
 
         update_option('kblog_mathjax_use_wplatex_syntax',
                       array_key_exists('kblog_mathjax_use_wplatex_syntax',$_POST));
-    
-        update_option('kblog_mathjax_use_cdn', 
+
+        update_option('kblog_mathjax_use_cdn',
                       array_key_exists('kblog_mathjax_use_cdn',$_POST));
-        
+
         if( array_key_exists("kblog_mathjax_custom_location",$_POST)){
-            update_option( "kblog_mathjax_custom_location", 
+            update_option( "kblog_mathjax_custom_location",
                            $_POST['kblog_mathjax_custom_location'] );
         }
-        
+
         if( array_key_exists("kblog_mathjax_config",$_POST)){
             update_option( "kblog_mathjax_config",
                            $_POST['kblog_mathjax_config'] );
@@ -201,18 +207,18 @@ EOT;
 </table>
 
 <input type="submit" value="Save Changes"/>
-</form> 
+</form>
 
-</div>       
+</div>
 EOT;
-        
+
     }
 
     function admin_table_row($head,$comment,$input){
 
         echo<<<EOT
         <tr>
-<td style="width: 20%">$head<br/>
+<td style="width: 35%">$head<br/>
 <font size="-2">$comment</font></td>
 <td>$input</td>
 </tr>
