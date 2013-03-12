@@ -54,6 +54,11 @@ current page, regardless of other tags.
 
 == Changelog ==
 
+= 1.2 =
+1. Admin page was open to attack from third party sites which user was logged
+   in as admin.
+1. The admin page has been isolated and rewritten.
+
 = 1.1 = 
 1. Documentation update
 1. Update test-with documentation for WordPress 3.5.1
@@ -67,6 +72,10 @@ current page, regardless of other tags.
 1. MathJax.js can be loaded form a configurable URL. Defaults to $PLUGIN/MathJax/MathJax.js
 
 == Upgrade Notice ==
+
+= 1.2 =
+
+Security update. All users advised to update. Options will require resetting.
 
 = 1.1 = 
 Documentation updates only. Upgrade for existing users is optional. 
