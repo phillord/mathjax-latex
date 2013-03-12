@@ -36,7 +36,9 @@ and $$x$$ syntaxes this is unnecessary.
 
 You can use wp-latex syntax, $latex E=mc^2$. Parameters can be
 specified as with wp-latex but will be ignored. This means that mathjax-latex
-should be a drop in replacement for wp-latex. 
+should be a drop in replacement for wp-latex. Because this conflicts with
+wp-latex, this behaviour is blocked when wp-latex is present, and must be
+explicitly enabled in the settings.
 
 You can also specify [nomathjax] -- this will block mathjax on the
 current page, regardless of other tags.
@@ -58,6 +60,8 @@ current page, regardless of other tags.
 1. Admin page was open to attack from third party sites which user was logged
    in as admin.
 1. The admin page has been isolated and rewritten.
+1. All the options have been renamed, which will, unfortunately mean
+   reconfiguring the plugin.
 
 = 1.1 = 
 1. Documentation update
