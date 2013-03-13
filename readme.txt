@@ -4,7 +4,7 @@ Contributors: philliplord, sjcockell, knowledgeblog, d_swan
 Tags: mathematics, math, latex, mathml, mathjax, science, res-comms, scholar, academic
 Requires at least: 3.0
 Tested up to: 3.5.1
-Stable tag: 1.1
+Stable tag: 1.2
 
 This plugin enables mathjax (http://www.mathjax.org) functionality for
 WordPress (http://www.wordpress.org). 
@@ -61,7 +61,8 @@ current page, regardless of other tags.
    in as admin.
 1. The admin page has been isolated and rewritten.
 1. All the options have been renamed, which will, unfortunately mean
-   reconfiguring the plugin.
+   reconfiguring the plugin. In particular, wp-latex syntax is switched off by
+   default. 
 
 = 1.1 = 
 1. Documentation update
