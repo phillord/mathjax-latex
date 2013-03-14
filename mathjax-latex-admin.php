@@ -54,9 +54,6 @@ class mathjax_latex_admin{
             $this->admin_save();
         }
 
-
-
-
         $checked_force_load = "";
 
         if(get_option( 'kblog_mathjax_force_load')){
@@ -127,7 +124,7 @@ EOT;
         $this->admin_table_row
             ("Custom MathJax location?",
              "If you are not using the CDN",
-             "<input type='textbox' name='mathjax_location' $custom_location $custom_location_disabled>"
+             "<input type='textbox' name='kblog_mathjax_custom_location' $custom_location $custom_location_disabled>"
              );
 
 
@@ -159,16 +156,12 @@ EOT;
     }
 
     function admin_save(){
-
-
         update_option('kblog_mathjax_force_load',
                        array_key_exists("kblog_mathjax_force_load",$_POST));
-
 
         if(array_key_exists("kblog_mathjax_latex_inline",$_POST)){
             update_option("kblog_mathjax_latex_inline",$_POST['kblog_mathjax_latex_inline']);
         }
-
 
         update_option('kblog_mathjax_use_wplatex_syntax',
                       array_key_exists('kblog_mathjax_use_wplatex_syntax',$_POST));
