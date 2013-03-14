@@ -5,6 +5,7 @@ Tags: mathematics, math, latex, mathml, mathjax, science, res-comms, scholar, ac
 Requires at least: 3.0
 Tested up to: 3.5.1
 Stable tag: 1.2
+License: GPLv3
 
 This plugin enables mathjax (http://www.mathjax.org) functionality for
 WordPress (http://www.wordpress.org). 
@@ -43,6 +44,9 @@ explicitly enabled in the settings.
 You can also specify [nomathjax] -- this will block mathjax on the
 current page, regardless of other tags.
 
+MathJax-LaTeX is developed on
+[Github](https://github.com/phillord/mathjax-latex). 
+
 == Installation ==
 
 1. Unzip the downloaded .zip archive to the `/wp-content/plugins/` directory
@@ -56,7 +60,12 @@ current page, regardless of other tags.
 
 == Changelog ==
 
+= 1.2.1 =
+
+1. Bug fix: custom location was not correctly applied.
+
 = 1.2 =
+
 1. Admin page was open to attack from third party sites which user was logged
    in as admin.
 1. The admin page has been isolated and rewritten.
@@ -65,6 +74,7 @@ current page, regardless of other tags.
    default. 
 
 = 1.1 = 
+
 1. Documentation update
 1. Update test-with documentation for WordPress 3.5.1
 1. Tested against MathJax2.1
@@ -77,6 +87,10 @@ current page, regardless of other tags.
 1. MathJax.js can be loaded form a configurable URL. Defaults to $PLUGIN/MathJax/MathJax.js
 
 == Upgrade Notice ==
+
+= 1.2.1 =
+
+Bug fix: Custom location was not correctly applied.
 
 = 1.2 =
 

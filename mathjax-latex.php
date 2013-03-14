@@ -2,7 +2,7 @@
   /*
    Plugin Name: Mathjax Latex
    Description: Transform latex equations in javascript using mathjax
-   Version: 1.2
+   Version: 1.2.1
    Author: Phillip Lord, Simon Cockell
    Author URI: http://knowledgeblog.org
    
@@ -128,7 +128,7 @@ function add_script(){
         $mathjax_location = "http://cdn.mathjax.org/mathjax/latest/MathJax.js";
     }
     else{
-        $mathjax_location = get_option('kblog_mathjax_location');
+        $mathjax_location = get_option('kblog_mathjax_custom_location');
     }
     
     $mathjax_url = $mathjax_location . "?config=" .get_option( "kblog_mathjax_config" );
