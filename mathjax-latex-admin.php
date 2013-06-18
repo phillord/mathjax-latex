@@ -27,7 +27,7 @@ class mathjax_latex_admin{
     }
 
     function admin_page_init(){
-        add_options_page( "MathJax-Latex", "MathJax-Latex",
+        add_options_page( "MathJax-Latex", "MathJax-LaTeX",
                           "manage_options", "kblog-mathjax-latex",
                           array($this, "plugin_options_menu")
                           );
@@ -50,7 +50,7 @@ class mathjax_latex_admin{
         // save options if this is a valid post
         if ( wp_verify_nonce( $_POST[ "kblog_mathjax_latex_save_field"],
                               "kblog_mathjax_latex_save_action")){
-            echo "<i>Options Updated</i>\n";
+            echo '<div class="updated settings-error" id="setting-error-settings_updated"><p><strong>Settings saved.</strong></p></div>';
             $this->admin_save();
         }
 
@@ -63,8 +63,9 @@ class mathjax_latex_admin{
         $this->admin_table_row
             (
              "Force Load",
-             "Force MathJax javascript to be loaded on every post (Removes the need to use the [mathjax] shortcode).",
-             "<input type=\"checkbox\" name=\"kblog_mathjax_force_load\" value=\"1\" $checked_force_load />"
+             "Force the MathJax JavaScript to be loaded on every post. This removes the need to use the [mathjax] shortcode.",
+             "<input type=\"checkbox\" name=\"kblog_mathjax_force_load\" id=\"kblog_mathjax_force_load\" value=\"1\" $checked_force_load />",
+             "kblog_mathjax_force_load"
              );
 
         $selected_inline = get_option( "kblog_mathjax_latex_inline" ) == "inline" ?
@@ -74,7 +75,7 @@ class mathjax_latex_admin{
 
 
         $syntax_input=<<<EOT
-<select name="kblog_mathjax_latex_inline">
+<select name="kblog_mathjax_latex_inline" id="kblog_mathjax_latex_inline">
 <option value="inline" $selected_inline>Inline</option>
 <option value="display" $selected_display>Display</option>
 </select>
@@ -83,7 +84,8 @@ EOT;
         $this->admin_table_row
             ( "Default [latex] syntax attribute.",
               "By default, the [latex] shortcode renders equations using the MathJax 'inline' syntax.",
-              $syntax_input
+              $syntax_input,
+              "kblog_mathjax_latex_inline"
               );
 
         $wp_latex_disabled = method_exists('WP_LaTeX','init') ?
@@ -97,8 +99,9 @@ EOT;
         $this->admin_table_row
             ("Use wp-latex syntax?",
              "Allows use of the $latex $ syntax, but conflicts with wp-latex. $wp_latex_disabled_warning",
-             "<input type='checkbox' name='kblog_mathjax_use_wplatex_syntax' $wp_latex_disabled " .
-             "$use_wp_latex_syntax value='1'/>" );
+             "<input type='checkbox' name='kblog_mathjax_use_wplatex_syntax' id='kblog_mathjax_use_wplatex_syntax' $wp_latex_disabled " .
+             "$use_wp_latex_syntax value='1'/>",
+             'kblog_mathjax_use_wplatex_syntax');
 
 
         $use_cdn = get_option( 'kblog_mathjax_use_cdn', true ) ?
@@ -106,11 +109,12 @@ EOT;
 
         $this->admin_table_row
             ( "Use MathJax CDN Service?",
-              "Allows use of the MathJax hosted contet delivery network." .
-              "By using this, you are agreeing to these " .
-              "<a href='http://www.mathjax.org/download/mathjax-cdn-terms-of-service/'>Terms of Service</a>.",
+              "Allows use of the MathJax hosted content delivery network. " .
+              "By using this, you are agreeing to the " .
+              "<a href='http://www.mathjax.org/download/mathjax-cdn-terms-of-service/'>MathJax CDN Terms of Service</a>.",
               "<input type=\"checkbox\" name=\"kblog_mathjax_use_cdn\" id=\"use_cdn\" value=\"1\" ".
-              "$use_cdn/>"
+              "$use_cdn/>",
+              'use_cdn'
               );
 
 
@@ -123,8 +127,9 @@ EOT;
 
         $this->admin_table_row
             ("Custom MathJax location?",
-             "If you are not using the CDN",
-             "<input type='textbox' name='kblog_mathjax_custom_location' $custom_location $custom_location_disabled>"
+             "If you are not using the MathJax CDN enter the location of your MathJax script.",
+             "<input type='textbox' name='kblog_mathjax_custom_location' id='kblog_mathjax_custom_location' $custom_location $custom_location_disabled>",
+             'kblog_mathjax_custom_location'
              );
 
 
@@ -135,7 +140,7 @@ EOT;
         $options[] = "TeX-AMS-MML_HTMLorMML";
 
 
-        $select_string = "<select name='kblog_mathjax_config'>\n";
+        $select_string = "<select name='kblog_mathjax_config' id='kblog_mathjax_config'>\n";
 
         foreach( $options as $i ){
             $selected = $i== get_option( "kblog_mathjax_config", "default" ) ?
@@ -147,8 +152,9 @@ EOT;
 
         $this->admin_table_row
             ( "MathJax Configuration",
-              "See MathJax documentation for details",
-              $select_string );
+              "See the <a href='http://docs.mathjax.org/en/v1.1-latest/configuration.html#loading'>MathJax documentation</a> for more details.",
+              $select_string,
+              'kblog_mathjax_config' );
 
         $this->table_foot();
 
@@ -185,10 +191,12 @@ EOT;
         // table head
         echo <<<EOT
 <div class="wrap" id="mathjax-latex-options">
-<h2>Mathjax-Latex by Kblog</h2>
+<div class="icon32" id="icon-options-general"><br></div>
+<h2>MathJax-LaTeX by Kblog</h2>
 <form id="mathjaxlatex" name="mathjaxlatex" action="" method="POST">
 $nonce
 <table class="form-table">
+<caption class='screen-reader-text'>The following lists configuration options for the MathJax-LaTeX plugin.</caption>
 EOT;
     }
 
@@ -196,24 +204,44 @@ EOT;
     function table_foot(){
         //table foot
         echo <<<EOT
-
 </table>
-
-<input type="submit" value="Save Changes"/>
+<p class="submit">
+  <input type="submit" class="button button-primary" value="Save Changes"/>
+</p>
 </form>
 
 </div>
+<script type="text/javascript">
+jQuery(function($){
+  if(typeof($.fn.prop) !== 'function'){
+    return; // ignore this for sites with jquery < 1.6 
+  }
+  // this is to disable or enable the cdn input field when 
+  // checking or unchuecking the use cdn checkbox
+  var cdn_check = $('#use_cdn'),
+    cdn_location = $('#kblog_mathjax_custom_location');
+
+  cdn_check.change(function(){
+    var checked = cdn_check.is(':checked');
+    cdn_location.prop('disabled',checked);
+  });
+  
+});
+</script>
 EOT;
 
     }
 
-    function admin_table_row($head,$comment,$input){
+    function admin_table_row($head,$comment,$input,$input_id){
 
         echo<<<EOT
-        <tr>
-<td style="width: 35%">$head<br/>
-<font size="-2">$comment</font></td>
-<td>$input</td>
+<tr valign="top">
+  <th scope="row">
+    <label for="{$input_id}">$head</label>
+  </th>
+  <td>$input
+    <p class="description">{$comment}</p>
+  </td>
 </tr>
 EOT;
 
