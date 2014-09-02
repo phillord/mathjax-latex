@@ -3,12 +3,12 @@
 Contributors: philliplord, sjcockell, knowledgeblog, d_swan
 Tags: mathematics, math, latex, mathml, mathjax, science, res-comms, scholar, academic
 Requires at least: 3.0
-Tested up to: 3.5.1
+Tested up to: 4.0.0
 Stable tag: 1.2.1
 License: GPLv3
 
 This plugin enables mathjax (http://www.mathjax.org) functionality for
-WordPress (http://www.wordpress.org). 
+WordPress (http://www.wordpress.org).
 
 == Description ==
 
@@ -27,13 +27,13 @@ and configuring the library yourself. Use of the CDN is governed by these
 You may embed latex using a variety of different syntaxes. The shortcode
 (http://codex.wordpress.org/Shortcode_API) syntax is preferred. So
 [latex]E=mc^2[/latex] will work out of the box. This also forces loading of
-mathjax.  
+mathjax.
 
 Additionally, you can use native mathjax syntax -- $$E=mc^2$$ or \(E=mc^2\).
 However, if this is the only syntax used, the plugin must be explicitly told
-to load mathjax for the current page. This can be achieved by adding a 
+to load mathjax for the current page. This can be achieved by adding a
 [mathjax] shortcode anywhere in the post. For posts with both [latex]x[/latex]
-and $$x$$ syntaxes this is unnecessary. 
+and $$x$$ syntaxes this is unnecessary.
 
 You can use wp-latex syntax, $latex E=mc^2$. Parameters can be
 specified as with wp-latex but will be ignored. This means that mathjax-latex
@@ -45,7 +45,7 @@ You can also specify [nomathjax] -- this will block mathjax on the
 current page, regardless of other tags.
 
 MathJax-LaTeX is developed on
-[Github](https://github.com/phillord/mathjax-latex). 
+[Github](https://github.com/phillord/mathjax-latex).
 
 == Installation ==
 
@@ -60,10 +60,15 @@ MathJax-LaTeX is developed on
 
 == Changelog ==
 
+= 1.3.0 =
+
+1. Whitelist MathML tags and attributes.
+1. Sanitization of input and escaping of output.
+
 = 1.2.1 =
 
 1. Bug fix: custom location was not correctly applied.
-1. Bug fix: force load was not correctly applied. 
+1. Bug fix: force load was not correctly applied.
 
 = 1.2 =
 
@@ -72,9 +77,9 @@ MathJax-LaTeX is developed on
 1. The admin page has been isolated and rewritten.
 1. All the options have been renamed, which will, unfortunately mean
    reconfiguring the plugin. In particular, wp-latex syntax is switched off by
-   default. 
+   default.
 
-= 1.1 = 
+= 1.1 =
 
 1. Documentation update
 1. Update test-with documentation for WordPress 3.5.1
@@ -98,8 +103,8 @@ Bug fix: Force load was not correctly applied.
 
 Security update. All users advised to update. Options will require resetting.
 
-= 1.1 = 
-Documentation updates only. Upgrade for existing users is optional. 
+= 1.1 =
+Documentation updates only. Upgrade for existing users is optional.
 
 = 1.0 =
 
@@ -109,4 +114,4 @@ CDN for javascript delivery. Upgrading is strongly recommended.
 == Copyright ==
 
 This plugin is copyright Phillip Lord, Newcastle University and is licensed
-under GPLv2. 
+under GPLv2.
