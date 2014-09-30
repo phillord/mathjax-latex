@@ -42,7 +42,7 @@ class MathJax_Latex_Admin {
 		if ( isset( $_POST['kblog_mathjax_latex_save_field'] ) &&
 			wp_verify_nonce( $_POST['kblog_mathjax_latex_save_field'], 'kblog_mathjax_latex_save_action' )
 		) {
-			echo '<div class="updated settings-error" id="setting-error-settings_updated"><p><strong>Settings saved.</strong></p></div>'."\n";
+			echo "<div class='updated settings-error' id='etting-error-settings_updated'><p><strong>Settings saved.</strong></p></div>\n";
 			$this->admin_save();
 		}
 
@@ -71,7 +71,7 @@ EOT;
 		$this->admin_table_row( 'Default [latex] syntax attribute.',
 			"By default, the [latex] shortcode renders equations using the MathJax 'inline' syntax.",
 			$syntax_input,
-			"kblog_mathjax_latex_inline"
+			'kblog_mathjax_latex_inline'
 		);
 
 		$wp_latex_disabled         = method_exists( 'WP_LaTeX', 'init' ) ? "disabled='disable'" : '';
@@ -197,7 +197,7 @@ jQuery(function($){
 EOT;
 	}
 
-	function admin_table_row( $head, $comment, $input, $input_id) {
+	function admin_table_row( $head, $comment, $input, $input_id ) {
 		echo <<<EOT
 				<tr valign="top">
 					<th scope="row">
