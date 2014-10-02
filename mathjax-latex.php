@@ -1,6 +1,6 @@
 <?php
 /*
- Plugin Name: Mathjax Latex
+ Plugin Name: MathJax-LaTeX
  Description: Transform latex equations in JavaScript using mathjax
  Version: 1.3.0
  Author: Phillip Lord, Simon Cockell, Paul Schreiber
@@ -187,7 +187,7 @@ class MathJax {
 		return preg_replace_callback(
 			'/(<math.*>.*<\/math>)/isU',
 			function ( $matches ) {
-				return str_replace( '<br/>', '', $matches[0] );
+				return str_replace( array( '<br/>', '<br />', '<br>' ) , '' , $matches[0] );
 			},
 			$content
 		);
