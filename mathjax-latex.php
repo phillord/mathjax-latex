@@ -37,6 +37,50 @@ require_once( dirname( __FILE__ ) . '/mathjax-latex-admin.php' );
 class MathJax {
 	static $add_script;
 	static $block_script;
+	static $mathml_tags = array(
+		'math'           => array( 'class', 'id', 'style', 'dir', 'href', 'mathbackground', 'mathcolor', 'display', 'overflow', 'xmlns' ),
+		'maction'        => array( 'actiontype', 'class', 'id', 'style', 'href', 'mathbackground', 'mathcolor', 'selection' ),
+		'maligngroup'    => array(),
+		'malignmark'     => array(),
+		'menclose'       => array( 'class', 'id', 'style', 'href', 'mathbackground', 'mathcolor', 'notation' ),
+		'merror'         => array( 'class', 'id', 'style', 'href', 'mathbackground', 'mathcolor' ),
+		'mfenced'        => array( 'class', 'id', 'style', 'close', 'href', 'mathbackground', 'mathcolor', 'open', 'separators' ),
+		'mfrac'          => array( 'bevelled', 'class', 'id', 'style', 'denomalign', 'href', 'linethickness', 'mathbackground', 'mathcolor', 'numalign' ),
+		'mglyph'         => array( 'alt', 'class', 'id', 'style', 'height', 'href', 'mathbackground', 'src', 'valign', 'width' ),
+		'mi'             => array( 'class', 'id', 'style', 'href', 'mathbackground', 'mathcolor', 'mathsize', 'mathvariant' ),
+		'mlabeledtr'     => array( 'class', 'id', 'style', 'columnalign', 'groupalign', 'href', 'mathbackground', 'mathcolor', 'rowalign' ),
+		'mlongdiv'       => array(),
+		'mmultiscripts'  => array( 'class', 'id', 'style', 'href', 'mathbackground', 'mathcolor', 'subscriptshift', 'superscriptshift' ),
+		'mn'             => array( 'class', 'id', 'style', 'dir', 'href', 'mathbackground', 'mathcolor', 'mathsize', 'mathvariant' ),
+		'mo'             => array( 'accent', 'class', 'id', 'style', 'dir', 'fence', 'form', 'href', 'largeop', 'lspace', 'mathbackground', 'mathcolor', 'mathsize', 'mathvariant', 'maxsize', 'minsize', 'moveablelimits', 'rspace', 'separator', 'stretchy', 'symmetric' ),
+		'mover'          => array( 'accent', 'align', 'class', 'id', 'style', 'href', 'mathbackground', 'mathcolor' ),
+		'mpadded'        => array( 'class', 'id', 'style', 'depth', 'height', 'href', 'lspace', 'mathbackground', 'mathcolor', 'voffset', 'width' ),
+		'mphantom'       => array( 'class', 'id', 'style', 'mathbackground' ),
+		'mroot'          => array( 'class', 'id', 'style', 'href', 'mathbackground', 'mathcolor' ),
+		'mrow'           => array( 'class', 'id', 'style', 'dir', 'href', 'mathbackground', 'mathcolor' ),
+		'ms'             => array( 'class', 'id', 'style', 'dir', 'lquote', 'href', 'mathbackground', 'mathcolor', 'mathsize', 'mathvariant', 'rquote' ),
+		'mscarries'      => array(),
+		'mscarry'        => array(),
+		'msgroup'        => array(),
+		'msline'         => array(),
+		'mspace'         => array( 'class', 'id', 'style', 'depth', 'height', 'linebreak', 'mathbackground', 'width' ),
+		'msqrt'          => array( 'class', 'id', 'style', 'href', 'mathbackground', 'mathcolor' ),
+		'msrow'          => array(),
+		'mstack'         => array(),
+		'mstyle'         => array( 'dir', 'decimalpoint', 'displaystyle', 'infixlinebreakstyle', 'scriptlevel', 'scriptminsize', 'scriptsizemultiplier' ),
+		'msub'           => array( 'class', 'id', 'style', 'mathbackground', 'mathcolor', 'subscriptshift' ),
+		'msubsup'        => array( 'class', 'id', 'style', 'href', 'mathbackground', 'mathcolor', 'subscriptshift', 'superscriptshift' ),
+		'msup'           => array( 'class', 'id', 'style', 'href', 'mathbackground', 'mathcolor', 'superscriptshift' ),
+		'mtable'         => array( 'class', 'id', 'style', 'align', 'alignmentscope', 'columnalign', 'columnlines', 'columnspacing', 'columnwidth', 'displaystyle', 'equalcolumns', 'equalrows', 'frame', 'framespacing', 'groupalign', 'href', 'mathbackground', 'mathcolor', 'minlabelspacing', 'rowalign', 'rowlines', 'rowspacing', 'side', 'width' ),
+		'mtd'            => array( 'class', 'id', 'style', 'columnalign', 'columnspan', 'groupalign', 'href', 'mathbackground', 'mathcolor', 'rowalign', 'rowspan' ),
+		'mtext'          => array( 'class', 'id', 'style', 'dir', 'href', 'mathbackground', 'mathcolor', 'mathsize', 'mathvariant' ),
+		'mtr'            => array( 'class', 'id', 'style', 'columnalign', 'groupalign', 'href', 'mathbackground', 'mathcolor', 'rowalign' ),
+		'munder'         => array( 'accentunder', 'align', 'class', 'id', 'style', 'mathbackground', 'mathcolor' ),
+		'munderover'     => array( 'accent', 'accentunder', 'align', 'class', 'id', 'style', 'href', 'mathbackground', 'mathcolor' ),
+		'semantics'      => array( 'definitionURL', 'encoding', 'cd', 'name', 'src' ),
+		'annotation'     => array( 'definitionURL', 'encoding', 'cd', 'name', 'src' ),
+		'annotation-xml' => array( 'definitionURL', 'encoding', 'cd', 'name', 'src' ),
+	);
 
 	public static function init() {
 		register_activation_hook( __FILE__, array( __CLASS__, 'mathjax_install' ) );
@@ -61,6 +105,7 @@ class MathJax {
 		add_filter( 'the_content', array( __CLASS__, 'filter_br_tags_on_math' ) );
 
 		add_action( 'init', array( __CLASS__, 'allow_mathml_tags' ) );
+		add_filter( 'tiny_mce_before_init',  array( __CLASS__, 'allow_mathml_tags_in_tinymce' ) );
 	}
 
 	// registers default options
@@ -201,58 +246,40 @@ class MathJax {
 	public static function allow_mathml_tags() {
 		global $allowedposttags;
 
-		$tags = array(
-			'math'           => array( 'class', 'id', 'style', 'dir', 'href', 'mathbackground', 'mathcolor', 'display', 'overflow', 'xmlns' ),
-			'maction'        => array( 'actiontype', 'class', 'id', 'style', 'href', 'mathbackground', 'mathcolor', 'selection' ),
-			'maligngroup'    => array(),
-			'malignmark'     => array(),
-			'menclose'       => array( 'class', 'id', 'style', 'href', 'mathbackground', 'mathcolor', 'notation' ),
-			'merror'         => array( 'class', 'id', 'style', 'href', 'mathbackground', 'mathcolor' ),
-			'mfenced'        => array( 'class', 'id', 'style', 'close', 'href', 'mathbackground', 'mathcolor', 'open', 'separators' ),
-			'mfrac'          => array( 'bevelled', 'class', 'id', 'style', 'denomalign', 'href', 'linethickness', 'mathbackground', 'mathcolor', 'numalign' ),
-			'mglyph'         => array( 'alt', 'class', 'id', 'style', 'height', 'href', 'mathbackground', 'src', 'valign', 'width' ),
-			'mi'             => array( 'class', 'id', 'style', 'href', 'mathbackground', 'mathcolor', 'mathsize', 'mathvariant' ),
-			'mlabeledtr'     => array( 'class', 'id', 'style', 'columnalign', 'groupalign', 'href', 'mathbackground', 'mathcolor', 'rowalign' ),
-			'mlongdiv'       => array(),
-			'mmultiscripts'  => array( 'class', 'id', 'style', 'href', 'mathbackground', 'mathcolor', 'subscriptshift', 'superscriptshift' ),
-			'mn'             => array( 'class', 'id', 'style', 'dir', 'href', 'mathbackground', 'mathcolor', 'mathsize', 'mathvariant' ),
-			'mo'             => array( 'accent', 'class', 'id', 'style', 'dir', 'fence', 'form', 'href', 'largeop', 'lspace', 'mathbackground', 'mathcolor', 'mathsize', 'mathvariant', 'maxsize', 'minsize', 'moveablelimits', 'rspace', 'separator', 'stretchy', 'symmetric' ),
-			'mover'          => array( 'accent', 'align', 'class', 'id', 'style', 'href', 'mathbackground', 'mathcolor' ),
-			'mpadded'        => array( 'class', 'id', 'style', 'depth', 'height', 'href', 'lspace', 'mathbackground', 'mathcolor', 'voffset', 'width' ),
-			'mphantom'       => array( 'class', 'id', 'style', 'mathbackground' ),
-			'mroot'          => array( 'class', 'id', 'style', 'href', 'mathbackground', 'mathcolor' ),
-			'mrow'           => array( 'class', 'id', 'style', 'dir', 'href', 'mathbackground', 'mathcolor' ),
-			'ms'             => array( 'class', 'id', 'style', 'dir', 'lquote', 'href', 'mathbackground', 'mathcolor', 'mathsize', 'mathvariant', 'rquote' ),
-			'mscarries'      => array(),
-			'mscarry'        => array(),
-			'msgroup'        => array(),
-			'msline'         => array(),
-			'mspace'         => array( 'class', 'id', 'style', 'depth', 'height', 'linebreak', 'mathbackground', 'width' ),
-			'msqrt'          => array( 'class', 'id', 'style', 'href', 'mathbackground', 'mathcolor' ),
-			'msrow'          => array(),
-			'mstack'         => array(),
-			'mstyle'         => array( 'dir', 'decimalpoint', 'displaystyle', 'infixlinebreakstyle', 'scriptlevel', 'scriptminsize', 'scriptsizemultiplier' ),
-			'msub'           => array( 'class', 'id', 'style', 'mathbackground', 'mathcolor', 'subscriptshift' ),
-			'msubsup'        => array( 'class', 'id', 'style', 'href', 'mathbackground', 'mathcolor', 'subscriptshift', 'superscriptshift' ),
-			'msup'           => array( 'class', 'id', 'style', 'href', 'mathbackground', 'mathcolor', 'superscriptshift' ),
-			'mtable'         => array( 'class', 'id', 'style', 'align', 'alignmentscope', 'columnalign', 'columnlines', 'columnspacing', 'columnwidth', 'displaystyle', 'equalcolumns', 'equalrows', 'frame', 'framespacing', 'groupalign', 'href', 'mathbackground', 'mathcolor', 'minlabelspacing', 'rowalign', 'rowlines', 'rowspacing', 'side', 'width' ),
-			'mtd'            => array( 'class', 'id', 'style', 'columnalign', 'columnspan', 'groupalign', 'href', 'mathbackground', 'mathcolor', 'rowalign', 'rowspan' ),
-			'mtext'          => array( 'class', 'id', 'style', 'dir', 'href', 'mathbackground', 'mathcolor', 'mathsize', 'mathvariant' ),
-			'mtr'            => array( 'class', 'id', 'style', 'columnalign', 'groupalign', 'href', 'mathbackground', 'mathcolor', 'rowalign' ),
-			'munder'         => array( 'accentunder', 'align', 'class', 'id', 'style', 'mathbackground', 'mathcolor' ),
-			'munderover'     => array( 'accent', 'accentunder', 'align', 'class', 'id', 'style', 'href', 'mathbackground', 'mathcolor' ),
-			'semantics'      => array( 'definitionURL', 'encoding', 'cd', 'name', 'src' ),
-			'annotation'     => array( 'definitionURL', 'encoding', 'cd', 'name', 'src' ),
-			'annotation-xml' => array( 'definitionURL', 'encoding', 'cd', 'name', 'src' ),
-		);
-
-		foreach ( $tags as $tag => $attributes ) {
+		foreach ( self::$mathml_tags as $tag => $attributes ) {
 			$allowedposttags[ $tag ] = array();
 
 			foreach ( $attributes as $a ) {
-				$allowedposttags[ $tag ][ $a ] = array();
+				$allowedposttags[ $tag ][ $a ] = true;
 			}
 		}
+	}
+
+	/**
+	 * Ensure that the MathML tags will not be removed
+	 * by the TinyMCE editor
+	 */
+	public static function allow_mathml_tags_in_tinymce( $options ) {
+		
+		$extended_tags = array();
+		
+		foreach (self::$mathml_tags as $tag => $attributes ) {
+			if ( ! empty($attributes) ) {
+				$tag = $tag . '[' . implode( '|' ,  $attributes ) . ']';
+			}
+
+			$extended_tags[] = $tag;
+		}
+
+		if ( ! isset( $options['extended_valid_elements'] ) )
+        	$options['extended_valid_elements'] = '';
+
+        
+        $options['extended_valid_elements'] .= ',' . implode( ',' , $extended_tags);
+        $options['extended_valid_elements'] = trim(  $options['extended_valid_elements'] , ',' );
+
+
+        return $options;
 	}
 }
 
