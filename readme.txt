@@ -1,6 +1,6 @@
 === MathJax-LaTeX ===
 
-Contributors: philliplord, sjcockell, knowledgeblog, d_swan
+Contributors: philliplord, sjcockell, knowledgeblog, d_swan, paulschreiber, jwenerd
 Tags: mathematics, math, latex, mathml, mathjax, science, res-comms, scholar, academic
 Requires at least: 3.0
 Tested up to: 4.0.0
