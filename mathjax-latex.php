@@ -1,15 +1,16 @@
 <?php
-  /*
-   Plugin Name: MathJax-LaTeX
-   Description: Transform latex equations in javascript using mathjax
-   Version: 1.2.1
-   Author: Phillip Lord, Simon Cockell
-   Author URI: http://knowledgeblog.org
-   
-   Copyright 2010. Phillip Lord (phillip.lord@newcastle.ac.uk)
-   Simon Cockell (s.j.cockell@newcastle.ac.uk)
-   Newcastle University. 
-  */
+/*
+ Plugin Name: MathJax-LaTeX
+ Description: Transform latex equations in JavaScript using mathjax
+ Version: 1.3.0
+ Author: Phillip Lord, Simon Cockell, Paul Schreiber
+ Author URI: http://knowledgeblog.org
+
+ Copyright 2010. Phillip Lord (phillip.lord@newcastle.ac.uk)
+ Simon Cockell (s.j.cockell@newcastle.ac.uk)
+ Newcastle University.
+ Paul Schreiber (paulschreiber@gmail.com)
+*/
 
 /*
  * The contents of this file are subject to the LGPL License, Version 3.0.
@@ -31,165 +32,255 @@
  * along with this program. If not, see http://www.gnu.org/licenses/.
  */
 
-require_once( dirname( __FILE__ ) . "/mathjax-latex-admin.php" );
+require_once( dirname( __FILE__ ) . '/mathjax-latex-admin.php' );
 
-class MathJax{
-  static $add_script;
-  static $block_script;
+class MathJax {
+	static $add_script;
+	static $block_script;
+	static $mathml_tags = array(
+		'math'           => array( 'class', 'id', 'style', 'dir', 'href', 'mathbackground', 'mathcolor', 'display', 'overflow', 'xmlns' ),
+		'maction'        => array( 'actiontype', 'class', 'id', 'style', 'href', 'mathbackground', 'mathcolor', 'selection' ),
+		'maligngroup'    => array(),
+		'malignmark'     => array(),
+		'menclose'       => array( 'class', 'id', 'style', 'href', 'mathbackground', 'mathcolor', 'notation' ),
+		'merror'         => array( 'class', 'id', 'style', 'href', 'mathbackground', 'mathcolor' ),
+		'mfenced'        => array( 'class', 'id', 'style', 'close', 'href', 'mathbackground', 'mathcolor', 'open', 'separators' ),
+		'mfrac'          => array( 'bevelled', 'class', 'id', 'style', 'denomalign', 'href', 'linethickness', 'mathbackground', 'mathcolor', 'numalign' ),
+		'mglyph'         => array( 'alt', 'class', 'id', 'style', 'height', 'href', 'mathbackground', 'src', 'valign', 'width' ),
+		'mi'             => array( 'class', 'id', 'style', 'href', 'mathbackground', 'mathcolor', 'mathsize', 'mathvariant' ),
+		'mlabeledtr'     => array( 'class', 'id', 'style', 'columnalign', 'groupalign', 'href', 'mathbackground', 'mathcolor', 'rowalign' ),
+		'mlongdiv'       => array(),
+		'mmultiscripts'  => array( 'class', 'id', 'style', 'href', 'mathbackground', 'mathcolor', 'subscriptshift', 'superscriptshift' ),
+		'mn'             => array( 'class', 'id', 'style', 'dir', 'href', 'mathbackground', 'mathcolor', 'mathsize', 'mathvariant' ),
+		'mo'             => array( 'accent', 'class', 'id', 'style', 'dir', 'fence', 'form', 'href', 'largeop', 'lspace', 'mathbackground', 'mathcolor', 'mathsize', 'mathvariant', 'maxsize', 'minsize', 'moveablelimits', 'rspace', 'separator', 'stretchy', 'symmetric' ),
+		'mover'          => array( 'accent', 'align', 'class', 'id', 'style', 'href', 'mathbackground', 'mathcolor' ),
+		'mpadded'        => array( 'class', 'id', 'style', 'depth', 'height', 'href', 'lspace', 'mathbackground', 'mathcolor', 'voffset', 'width' ),
+		'mphantom'       => array( 'class', 'id', 'style', 'mathbackground' ),
+		'mroot'          => array( 'class', 'id', 'style', 'href', 'mathbackground', 'mathcolor' ),
+		'mrow'           => array( 'class', 'id', 'style', 'dir', 'href', 'mathbackground', 'mathcolor' ),
+		'ms'             => array( 'class', 'id', 'style', 'dir', 'lquote', 'href', 'mathbackground', 'mathcolor', 'mathsize', 'mathvariant', 'rquote' ),
+		'mscarries'      => array(),
+		'mscarry'        => array(),
+		'msgroup'        => array(),
+		'msline'         => array(),
+		'mspace'         => array( 'class', 'id', 'style', 'depth', 'height', 'linebreak', 'mathbackground', 'width' ),
+		'msqrt'          => array( 'class', 'id', 'style', 'href', 'mathbackground', 'mathcolor' ),
+		'msrow'          => array(),
+		'mstack'         => array(),
+		'mstyle'         => array( 'dir', 'decimalpoint', 'displaystyle', 'infixlinebreakstyle', 'scriptlevel', 'scriptminsize', 'scriptsizemultiplier' ),
+		'msub'           => array( 'class', 'id', 'style', 'mathbackground', 'mathcolor', 'subscriptshift' ),
+		'msubsup'        => array( 'class', 'id', 'style', 'href', 'mathbackground', 'mathcolor', 'subscriptshift', 'superscriptshift' ),
+		'msup'           => array( 'class', 'id', 'style', 'href', 'mathbackground', 'mathcolor', 'superscriptshift' ),
+		'mtable'         => array( 'class', 'id', 'style', 'align', 'alignmentscope', 'columnalign', 'columnlines', 'columnspacing', 'columnwidth', 'displaystyle', 'equalcolumns', 'equalrows', 'frame', 'framespacing', 'groupalign', 'href', 'mathbackground', 'mathcolor', 'minlabelspacing', 'rowalign', 'rowlines', 'rowspacing', 'side', 'width' ),
+		'mtd'            => array( 'class', 'id', 'style', 'columnalign', 'columnspan', 'groupalign', 'href', 'mathbackground', 'mathcolor', 'rowalign', 'rowspan' ),
+		'mtext'          => array( 'class', 'id', 'style', 'dir', 'href', 'mathbackground', 'mathcolor', 'mathsize', 'mathvariant' ),
+		'mtr'            => array( 'class', 'id', 'style', 'columnalign', 'groupalign', 'href', 'mathbackground', 'mathcolor', 'rowalign' ),
+		'munder'         => array( 'accentunder', 'align', 'class', 'id', 'style', 'mathbackground', 'mathcolor' ),
+		'munderover'     => array( 'accent', 'accentunder', 'align', 'class', 'id', 'style', 'href', 'mathbackground', 'mathcolor' ),
+		'semantics'      => array( 'definitionURL', 'encoding', 'cd', 'name', 'src' ),
+		'annotation'     => array( 'definitionURL', 'encoding', 'cd', 'name', 'src' ),
+		'annotation-xml' => array( 'definitionURL', 'encoding', 'cd', 'name', 'src' ),
+	);
 
-  function init(){
-    register_activation_hook(__FILE__, array(__CLASS__, 'mathjax_install'));
-    register_deactivation_hook(__FILE__, array(__CLASS__, 'mathjax_uninstall'));
-  
-    if (get_option('kblog_mathjax_force_load')) {
-        self::$add_script = true;
-    }
-    
-    add_shortcode('mathjax', 
-                  array(__CLASS__, 'mathjax_shortcode' ));
-    
-    add_shortcode('nomathjax',
-                  array(__CLASS__, 'nomathjax_shortcode' ));
-    add_shortcode('latex', 
-                  array(__CLASS__, 'latex_shortcode' ));
-    add_action('wp_footer', 
-               array(__CLASS__, 'add_script'));
-    add_action('wp_footer', 
-               array(__CLASS__, 'unconditional'));
-    if (get_option('kblog_mathjax_use_wplatex_syntax')) {
-        add_filter( 'the_content', array(__CLASS__, 'inline_to_shortcode' ) );
-    }
-    add_filter('plugin_action_links', array(__CLASS__, 'mathjax_settings_link'), 9, 2 );
-  }
+	public static function init() {
+		register_activation_hook( __FILE__, array( __CLASS__, 'mathjax_install' ) );
+		register_deactivation_hook( __FILE__, array( __CLASS__, 'mathjax_uninstall' ) );
 
-  function mathjax_install() {
-    //registers default options
-    add_option('kblog_mathjax_force_load', false);
-    add_option('kblog_mathjax_latex_inline', 'inline');
-    add_option('kblog_mathjax_use_wplatex_syntax', false );
-    add_option('kblog_mathjax_use_cdn', true);
-    add_option('kblog_mathjax_custom_location',false);
-    add_option('kblog_mathjax_config',"default");
-  }
+		if ( get_option( 'kblog_mathjax_force_load' ) ) {
+			self::$add_script = true;
+		}
 
+		add_shortcode( 'mathjax', array( __CLASS__, 'mathjax_shortcode' ) );
+		add_shortcode( 'nomathjax', array( __CLASS__, 'nomathjax_shortcode' ) );
+		add_shortcode( 'latex', array( __CLASS__, 'latex_shortcode' ) );
+		add_action( 'wp_footer', array( __CLASS__, 'add_script' ) );
+		add_action( 'wp_footer', array( __CLASS__, 'unconditional' ) );
 
-  function mathjax_uninstall() {
-    delete_option('kblog_mathjax_force_load');
-    delete_option('kblog_mathjax_latex_inline');
-    delete_option('kblog_mathjax_use_wplatex_syntax');
-    delete_option('kblog_mathjax_use_cdn');
-    delete_option('kblog_mathjax_custom_location');
-    delete_option('kblog_mathjax_config');
-  }
-  
-  function unconditional(){
-    echo '<!-- MathJax Latex Plugin installed';
-    if( !self::$add_script ) 
-      echo ': Disabled as no shortcodes on this page';
+		if ( get_option( 'kblog_mathjax_use_wplatex_syntax' ) ) {
+			add_filter( 'the_content', array( __CLASS__, 'inline_to_shortcode' ) );
+		}
 
-    if( self::$block_script )
-      echo ': Disabled by nomathjax shortcode';
-    
-    echo ' -->';
-  }
+		add_filter( 'plugin_action_links', array( __CLASS__, 'mathjax_settings_link' ), 9, 2 );
 
-  function mathjax_shortcode($atts,$content){
-    self::$add_script = true;
-  }
+		add_filter( 'the_content', array( __CLASS__, 'filter_br_tags_on_math' ) );
 
-  function nomathjax_shortcode($atts,$content){
-    self::$block_script = true;
-  }
-  
-  function latex_shortcode($atts,$content)
-  {
-    self::$add_script = true;
-    //this gives us an optional "syntax" attribute, which defaults to "inline", but can also be "display"
-    extract(shortcode_atts(array(
-                'syntax' => get_option('kblog_mathjax_latex_inline'),
-            ), $atts));
-    if ($syntax == 'inline') {
-        return "\(" . $content . "\)";
-    }
-    else if ($syntax == 'display') {
-        return "\[" . $content . "\]";
-    }
-  }
+		add_action( 'init', array( __CLASS__, 'allow_mathml_tags' ) );
+		add_filter( 'tiny_mce_before_init',  array( __CLASS__, 'allow_mathml_tags_in_tinymce' ) );
+	}
 
-function add_script(){
-    if( !self::$add_script )
-      return;
-    
-    if( self::$block_script )
-      return;
-    
-    //initialise option for existing MathJax-LaTeX users
-    if (get_option('kblog_mathjax_use_cdn')
-        || !get_option('kblog_mathjax_custom_location')){
-        $mathjax_location = "http://cdn.mathjax.org/mathjax/latest/MathJax.js";
-    }
-    else{
-        $mathjax_location = get_option('kblog_mathjax_custom_location');
-    }
-    
-    $mathjax_url = $mathjax_location . "?config=" .get_option( "kblog_mathjax_config" );
+	// registers default options
+	public function mathjax_install() {
+		add_option( 'kblog_mathjax_force_load', false );
+		add_option( 'kblog_mathjax_latex_inline', 'inline' );
+		add_option( 'kblog_mathjax_use_wplatex_syntax', false );
+		add_option( 'kblog_mathjax_use_cdn', true );
+		add_option( 'kblog_mathjax_custom_location', false );
+		add_option( 'kblog_mathjax_config', 'default' );
+	}
 
-    wp_register_script( 'mathjax', 
-                        $mathjax_url,
-                        false, null, true );
+	public function mathjax_uninstall() {
+		delete_option( 'kblog_mathjax_force_load' );
+		delete_option( 'kblog_mathjax_latex_inline' );
+		delete_option( 'kblog_mathjax_use_wplatex_syntax' );
+		delete_option( 'kblog_mathjax_use_cdn' );
+		delete_option( 'kblog_mathjax_custom_location' );
+		delete_option( 'kblog_mathjax_config' );
+	}
 
-    wp_print_scripts( 'mathjax' );
-  }
-  
-  function inline_to_shortcode( $content ) {
-    if ( false === strpos( $content, '$latex' ) )
-      return $content;
-    
-    self::$add_script = true;
+	public static function unconditional() {
+		echo '<!-- MathJax Latex Plugin installed';
+		if ( ! self::$add_script ) {
+			echo ': Disabled as no shortcodes on this page';
+		}
+
+		if ( self::$block_script ) {
+			echo ': Disabled by nomathjax shortcode';
+		}
+
+		echo ' -->';
+	}
+
+	public static function mathjax_shortcode( $atts, $content ) {
+		self::$add_script = true;
+	}
+
+	public static function nomathjax_shortcode( $atts, $content ) {
+		self::$block_script = true;
+	}
+
+	public static function latex_shortcode( $atts, $content ) {
+		self::$add_script = true;
+
+		// this gives us an optional "syntax" attribute, which defaults to "inline", but can also be "display"
+		extract( shortcode_atts( array( 'syntax' => get_option( 'kblog_mathjax_latex_inline' ) ), $atts ) );
+		if ( $syntax === 'inline' ) {
+			return '\(' . $content . '\)';
+		} else if ( $syntax === 'display' ) {
+			return '\[' . $content . '\]';
+		}
+	}
+
+	public static function add_script() {
+		if ( ! self::$add_script ) {
+			return;
+		}
+
+		if ( self::$block_script ) {
+			return;
+		}
+
+		// initialise option for existing MathJax-LaTeX users
+		if ( get_option( 'kblog_mathjax_use_cdn' ) || ! get_option( 'kblog_mathjax_custom_location' ) ) {
+			$mathjax_location = '//cdn.mathjax.org/mathjax/latest/MathJax.js';
+		} else {
+			$mathjax_location = get_option( 'kblog_mathjax_custom_location' );
+		}
+
+		$mathjax_url = $mathjax_location . '?config=' . get_option( 'kblog_mathjax_config' );
+
+		wp_enqueue_script( 'mathjax', $mathjax_url, false, '1.2.1', false );
+	}
+
+	public static function inline_to_shortcode( $content ) {
+		if ( false === strpos( $content, '$latex' ) ) {
+			return $content;
+		}
+
+		self::$add_script = true;
+
+		return preg_replace_callback( '#\$latex[= ](.*?[^\\\\])\$#', array( __CLASS__, 'inline_to_shortcode_callback' ), $content );
+	}
+
+	public function inline_to_shortcode_callback( $matches ) {
+
+		//
+		// Also support wp-latex syntax. This includes the ability to set background and foreground
+		// colour, which we can ignore.
+		//
+
+		if ( preg_match( '/.+((?:&#038;|&amp;)s=(-?[0-4])).*/i', $matches[1], $s_matches ) ) {
+			$matches[1] = str_replace( $s_matches[1], '', $matches[1] );
+		}
+
+		if ( preg_match( '/.+((?:&#038;|&amp;)fg=([0-9a-f]{6})).*/i', $matches[1], $fg_matches ) ) {
+			$matches[1] = str_replace( $fg_matches[1], '', $matches[1] );
+		}
+
+		if ( preg_match( '/.+((?:&#038;|&amp;)bg=([0-9a-f]{6})).*/i', $matches[1], $bg_matches ) ) {
+			$matches[1] = str_replace( $bg_matches[1], '', $matches[1] );
+		}
+
+		return "[latex]{$matches[1]}[/latex]";
+	}
+
+	// add a link to settings on the plugin management page
+	public function mathjax_settings_link( $links, $file ) {
+		if ( $file === 'mathjax-latex/mathjax-latex.php' && function_exists( 'admin_url' ) ) {
+			$settings_link = '<a href="' . esc_url( admin_url( 'options-general.php?page=kblog-mathjax-latex' ) ) . '">' . esc_html__( 'Settings' ) . '</a>';
+			array_unshift( $links, $settings_link );
+		}
+		return $links;
+	}
+
+	/**
+	 * Removes the <br /> tags inside math tags
+	 *
+	 * @param $content
+	 * @return string without <br /> tags
+	 */
+	public static function filter_br_tags_on_math( $content ) {
+		return preg_replace_callback(
+			'/(<math.*>.*<\/math>)/isU',
+			function ( $matches ) {
+				return str_replace( array( '<br/>', '<br />', '<br>' ) , '' , $matches[0] );
+			},
+			$content
+		);
+	}
+
+	/**
+	 * Allow MathML tags within WordPress
+	 * http://vip.wordpress.com/documentation/register-additional-html-attributes-for-tinymce-and-wp-kses/
+	 * https://developer.mozilla.org/en-US/docs/Web/MathML/Element
+	 */
+	public static function allow_mathml_tags() {
+		global $allowedposttags;
+
+		foreach ( self::$mathml_tags as $tag => $attributes ) {
+			$allowedposttags[ $tag ] = array();
+
+			foreach ( $attributes as $a ) {
+				$allowedposttags[ $tag ][ $a ] = true;
+			}
+		}
+	}
+
+	/**
+	 * Ensure that the MathML tags will not be removed
+	 * by the TinyMCE editor
+	 */
+	public static function allow_mathml_tags_in_tinymce( $options ) {
+		
+		$extended_tags = array();
+		
+		foreach (self::$mathml_tags as $tag => $attributes ) {
+			if ( ! empty($attributes) ) {
+				$tag = $tag . '[' . implode( '|' ,  $attributes ) . ']';
+			}
+
+			$extended_tags[] = $tag;
+		}
+
+		if ( ! isset( $options['extended_valid_elements'] ) )
+        	$options['extended_valid_elements'] = '';
+
         
-    return preg_replace_callback( '#\$latex[= ](.*?[^\\\\])\$#', 
-                                  array(__CLASS__,'inline_to_shortcode_callback'),
-                                  $content );
-  }
+        $options['extended_valid_elements'] .= ',' . implode( ',' , $extended_tags);
+        $options['extended_valid_elements'] = trim(  $options['extended_valid_elements'] , ',' );
 
-  function inline_to_shortcode_callback( $matches ) {
-    
-  //   ##
-  //   ## Also support wp-latex syntax. This includes the ability to set background and foreground 
-  //   ## colour, which we can ignore. 
-  //   ##
 
-    if ( preg_match( '/.+((?:&#038;|&amp;)s=(-?[0-4])).*/i', 
-                     $matches[1], $s_matches ) ) {
-      $matches[1] = str_replace( $s_matches[1], '', $matches[1] );
-    }
-    
-    if ( preg_match( '/.+((?:&#038;|&amp;)fg=([0-9a-f]{6})).*/i', 
-                     $matches[1], $fg_matches ) ) {
-      $matches[1] = str_replace( $fg_matches[1], '', $matches[1] );
-    }
-	
-    if ( preg_match( '/.+((?:&#038;|&amp;)bg=([0-9a-f]{6})).*/i', 
-                     $matches[1], $bg_matches ) ) {
-      $matches[1] = str_replace( $bg_matches[1], '', $matches[1] );
-    }
-    
-    return "[latex]{$matches[1]}[/latex]";
-  }
-
-  //add a link to settings on the plugin management page
-  function mathjax_settings_link( $links, $file ) {
-    if ($file == 'mathjax-latex/mathjax-latex.php' && function_exists('admin_url')) {
-        $settings_link = '<a href="' .admin_url('options-general.php?page=kblog-mathjax-latex').'">'. __('Settings') . '</a>';
-        array_unshift($links, $settings_link);
-    }
-    return $links;
-  }
-
+        return $options;
+	}
 }
 
 MathJax::init();
-
-
-
-?>
