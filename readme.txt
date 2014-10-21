@@ -60,6 +60,15 @@ MathJax-LaTeX is developed on
 
 == Changelog ==
 
+= 1.3.1 =
+
+1. Accessibility Improvements for Admin page
+1. VIP Coding Standards 
+1. MathML tags enabled in TinyMCE
+
+All code for this release was submitted by users of 
+this plugin! Thanks to Jared Wenerd and Paul Schreiber.
+
 = 1.3.0 =
 
 1. Whitelist MathML tags and attributes.
@@ -93,6 +102,10 @@ MathJax-LaTeX is developed on
 1. MathJax.js can be loaded form a configurable URL. Defaults to $PLUGIN/MathJax/MathJax.js
 
 == Upgrade Notice ==
+
+= 1.3.1 =
+
+Accessibility improvements.
 
 = 1.2.1 =
 
