@@ -1,6 +1,6 @@
 === MathJax-LaTeX ===
 
-Contributors: philliplord, sjcockell, knowledgeblog, d_swan
+Contributors: philliplord, sjcockell, knowledgeblog, d_swan, paulschreiber, jwenerd
 Tags: mathematics, math, latex, mathml, mathjax, science, res-comms, scholar, academic
 Requires at least: 3.0
 Tested up to: 4.0.0
@@ -63,10 +63,10 @@ MathJax-LaTeX is developed on
 = 1.3.1 =
 
 1. Accessibility Improvements for Admin page
-1. VIP Coding Standards 
+1. VIP Coding Standards
 1. MathML tags enabled in TinyMCE
 
-All code for this release was submitted by users of 
+All code for this release was submitted by users of
 this plugin! Thanks to Jared Wenerd and Paul Schreiber.
 
 = 1.3.0 =

@@ -119,7 +119,7 @@ EOT;
 			"See the <a href='http://docs.mathjax.org/en/v1.1-latest/configuration.html#loading'>MathJax documentation</a> for more details.",
 			$select_string,
 			'kblog_mathjax_config'
-		 );
+		);
 
 		$this->table_foot();
 	}
@@ -181,9 +181,9 @@ EOT;
 <script type="text/javascript">
 jQuery(function($){
 	if(typeof($.fn.prop) !== 'function'){
-		return; // ignore this for sites with jquery < 1.6 
+		return; // ignore this for sites with jquery < 1.6
 	}
-	// this is to disable or enable the cdn input field when 
+	// this is to disable or enable the cdn input field when
 	// checking or unchuecking the use cdn checkbox
 	var cdn_check = $('#use_cdn'),
 	cdn_location = $('#kblog_mathjax_custom_location');
@@ -191,7 +191,7 @@ jQuery(function($){
 	cdn_check.change(function(){
 		var checked = cdn_check.is(':checked');
 		cdn_location.prop('disabled',checked);
-	}); 
+	});
 });
 </script>
 EOT;

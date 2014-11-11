@@ -153,9 +153,9 @@ class MathJax {
 
 		// this gives us an optional "syntax" attribute, which defaults to "inline", but can also be "display"
 		extract( shortcode_atts( array( 'syntax' => get_option( 'kblog_mathjax_latex_inline' ) ), $atts ) );
-		if ( $syntax === 'inline' ) {
+		if ( 'inline' === $syntax ) {
 			return '\(' . $content . '\)';
-		} else if ( $syntax === 'display' ) {
+		} else if ( 'display' === $syntax ) {
 			return '\[' . $content . '\]';
 		}
 	}
@@ -215,7 +215,7 @@ class MathJax {
 
 	// add a link to settings on the plugin management page
 	public function mathjax_settings_link( $links, $file ) {
-		if ( $file === 'mathjax-latex/mathjax-latex.php' && function_exists( 'admin_url' ) ) {
+		if ( 'mathjax-latex/mathjax-latex.php' === $file && function_exists( 'admin_url' ) ) {
 			$settings_link = '<a href="' . esc_url( admin_url( 'options-general.php?page=kblog-mathjax-latex' ) ) . '">' . esc_html__( 'Settings' ) . '</a>';
 			array_unshift( $links, $settings_link );
 		}
@@ -260,26 +260,25 @@ class MathJax {
 	 * by the TinyMCE editor
 	 */
 	public static function allow_mathml_tags_in_tinymce( $options ) {
-		
+
 		$extended_tags = array();
-		
-		foreach (self::$mathml_tags as $tag => $attributes ) {
-			if ( ! empty($attributes) ) {
+
+		foreach ( self::$mathml_tags as $tag => $attributes ) {
+			if ( ! empty( $attributes ) ) {
 				$tag = $tag . '[' . implode( '|' ,  $attributes ) . ']';
 			}
 
 			$extended_tags[] = $tag;
 		}
 
-		if ( ! isset( $options['extended_valid_elements'] ) )
-        	$options['extended_valid_elements'] = '';
+		if ( ! isset( $options['extended_valid_elements'] ) ) {
+			$options['extended_valid_elements'] = '';
+		}
 
-        
-        $options['extended_valid_elements'] .= ',' . implode( ',' , $extended_tags);
-        $options['extended_valid_elements'] = trim(  $options['extended_valid_elements'] , ',' );
+		$options['extended_valid_elements'] .= ',' . implode( ',' , $extended_tags );
+		$options['extended_valid_elements'] = trim(  $options['extended_valid_elements'] , ',' );
 
-
-        return $options;
+		return $options;
 	}
 }
 
