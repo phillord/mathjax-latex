@@ -60,6 +60,10 @@ MathJax-LaTeX is developed on
 
 == Changelog ==
 
+= 1.3.2 =
+
+1. Further code clean ups.
+
 = 1.3.1 =
 
 1. Accessibility Improvements for Admin page
