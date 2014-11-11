@@ -4,7 +4,7 @@ Contributors: philliplord, sjcockell, knowledgeblog, d_swan, paulschreiber, jwen
 Tags: mathematics, math, latex, mathml, mathjax, science, res-comms, scholar, academic
 Requires at least: 3.0
 Tested up to: 4.0.0
-Stable tag: 1.3.2
+Stable tag: 1.3.3
 License: GPLv3
 
 This plugin enables mathjax (http://www.mathjax.org) functionality for
@@ -59,6 +59,10 @@ MathJax-LaTeX is developed on
 
 
 == Changelog ==
+
+= 1.3.3 =
+
+1. Fixed inconsistent version numbers between readme and php file
 
 = 1.3.2 =
 
