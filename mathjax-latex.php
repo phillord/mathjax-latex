@@ -109,7 +109,7 @@ class MathJax {
 	}
 
 	// registers default options
-	public function mathjax_install() {
+	public static function mathjax_install() {
 		add_option( 'kblog_mathjax_force_load', false );
 		add_option( 'kblog_mathjax_latex_inline', 'inline' );
 		add_option( 'kblog_mathjax_use_wplatex_syntax', false );
@@ -118,7 +118,7 @@ class MathJax {
 		add_option( 'kblog_mathjax_config', 'default' );
 	}
 
-	public function mathjax_uninstall() {
+	public static function mathjax_uninstall() {
 		delete_option( 'kblog_mathjax_force_load' );
 		delete_option( 'kblog_mathjax_latex_inline' );
 		delete_option( 'kblog_mathjax_use_wplatex_syntax' );
@@ -191,7 +191,7 @@ class MathJax {
 		return preg_replace_callback( '#\$latex[= ](.*?[^\\\\])\$#', array( __CLASS__, 'inline_to_shortcode_callback' ), $content );
 	}
 
-	public function inline_to_shortcode_callback( $matches ) {
+	public static function inline_to_shortcode_callback( $matches ) {
 
 		//
 		// Also support wp-latex syntax. This includes the ability to set background and foreground
@@ -214,7 +214,7 @@ class MathJax {
 	}
 
 	// add a link to settings on the plugin management page
-	public function mathjax_settings_link( $links, $file ) {
+	public static function mathjax_settings_link( $links, $file ) {
 		if ( 'mathjax-latex/mathjax-latex.php' === $file && function_exists( 'admin_url' ) ) {
 			$settings_link = '<a href="' . esc_url( admin_url( 'options-general.php?page=kblog-mathjax-latex' ) ) . '">' . esc_html__( 'Settings' ) . '</a>';
 			array_unshift( $links, $settings_link );
