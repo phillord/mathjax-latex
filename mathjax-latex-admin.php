@@ -80,7 +80,7 @@ EOT;
 		$use_wp_latex_syntax = get_option( 'kblog_mathjax_use_wplatex_syntax', false ) ? "checked='true'" : '';
 
 		$this->admin_table_row( 'Use wp-latex syntax?',
-			"Allows use of the $latex$ syntax, but conflicts with wp-latex. $wp_latex_disabled_warning",
+			"Allows use of the \$latex$ syntax, but conflicts with wp-latex. $wp_latex_disabled_warning",
 			"<input type='checkbox' name='kblog_mathjax_use_wplatex_syntax' id='kblog_mathjax_use_wplatex_syntax' $wp_latex_disabled $use_wp_latex_syntax value='1'/>",
 			'kblog_mathjax_use_wplatex_syntax'
 		);
