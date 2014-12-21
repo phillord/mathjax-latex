@@ -21,6 +21,25 @@
 
 class MathJax_Latex_Admin {
 
+	static $admin_tags = array(
+		'input' => array(
+			'type' => array(),
+			'name' => array(),
+			'id' => array(),
+			'disabled' => array(),
+			'value' => array(),
+			'checked' => array(),
+		),
+		'select' => array(
+			'name' => array(),
+			'id' => array(),
+		),
+		'option' => array(
+			'value' => array(),
+			'selected' => array(),
+		),
+	);
+
 	function __construct() {
 		add_action( 'admin_menu', array( $this, 'admin_page_init' ) );
 	}
@@ -80,7 +99,7 @@ EOT;
 		$use_wp_latex_syntax = get_option( 'kblog_mathjax_use_wplatex_syntax', false ) ? "checked='true'" : '';
 
 		$this->admin_table_row( 'Use wp-latex syntax?',
-			"Allows use of the $latex$ syntax, but conflicts with wp-latex. $wp_latex_disabled_warning",
+			"Allows use of the \$latex$ syntax, but conflicts with wp-latex. $wp_latex_disabled_warning",
 			"<input type='checkbox' name='kblog_mathjax_use_wplatex_syntax' id='kblog_mathjax_use_wplatex_syntax' $wp_latex_disabled $use_wp_latex_syntax value='1'/>",
 			'kblog_mathjax_use_wplatex_syntax'
 		);
@@ -198,17 +217,17 @@ EOT;
 	}
 
 	function admin_table_row( $head, $comment, $input, $input_id ) {
-		echo <<<EOT
-				<tr valign="top">
+		?>
+			<tr valign="top">
 					<th scope="row">
-						<label for="$input_id">$head</label>
+						<label for="<?php echo esc_attr( $input_id ); ?>"><?php echo esc_html( $head ); ?></label>
 					</th>
 					<td>
-						$input
-						<p class="description">$comment</p>
+						<?php echo wp_kses( $input, self::$admin_tags ); ?>
+						<p class="description"><?php echo wp_kses_post( $comment ); ?></p>
 					</td>
 				</tr>
-EOT;
+<?php
 	}
 
 } // class
