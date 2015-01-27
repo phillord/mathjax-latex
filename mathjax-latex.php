@@ -276,7 +276,7 @@ class MathJax {
 		}
 
 		$options['extended_valid_elements'] .= ',' . implode( ',' , $extended_tags );
-		$options['extended_valid_elements'] = trim(  $options['extended_valid_elements'] , ',' );
+		$options['extended_valid_elements'] = trim( $options['extended_valid_elements'] , ',' );
 
 		return $options;
 	}
