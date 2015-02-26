@@ -53,9 +53,7 @@ class MathJax_Latex_Admin {
 			wp_die( __( 'You do not have sufficient permissions to access this page.' ) );
 		}
 
-		$nonce = wp_nonce_field( 'kblog_mathjax_latex_save_action', 'kblog_mathjax_latex_save_field', true, false );
-
-		$this->table_head( $nonce );
+		$this->table_head();
 
 		// save options if this is a valid post
 		if ( isset( $_POST['kblog_mathjax_latex_save_field'] ) && // input var okay
@@ -178,42 +176,41 @@ EOT;
 		}
 	}
 
-	function table_head( $nonce ) {
-		echo <<<EOT
-<div class="wrap" id="mathjax-latex-options">
-<h2>Mathjax-Latex by Kblog</h2>
-<form id="mathjaxlatex" name="mathjaxlatex" action="" method="POST">
-$nonce
-<table class="form-table">
-<caption class='screen-reader-text'>The following lists configuration options for the MathJax-LaTeX plugin.</caption>
-EOT;
+	function table_head() {
+		?>
+		<div class='wrap' id='mathjax-latex-options'>
+			<h2>Mathjax-Latex by Kblog</h2>
+			<form id='mathjaxlatex' name='mathjaxlatex' action='' method='POST'>
+				<?php wp_nonce_field( 'kblog_mathjax_latex_save_action', 'kblog_mathjax_latex_save_field', true ); ?>
+			<table class='form-table'>
+			<caption class='screen-reader-text'>The following lists configuration options for the MathJax-LaTeX plugin.</caption>
+		<?php
 	}
 
 	function table_foot() {
-		echo <<<EOT
-</table>
+		?>
+		</table>
 
-<p class="submit"><input type="submit" class="button button-primary" value="Save Changes"/></p>
-</form>
+		<p class="submit"><input type="submit" class="button button-primary" value="Save Changes"/></p>
+		</form>
 
-</div>
-<script type="text/javascript">
-jQuery(function($){
-	if(typeof($.fn.prop) !== 'function'){
-		return; // ignore this for sites with jquery < 1.6
-	}
-	// this is to disable or enable the cdn input field when
-	// checking or unchuecking the use cdn checkbox
-	var cdn_check = $('#use_cdn'),
-	cdn_location = $('#kblog_mathjax_custom_location');
+		</div>
+		<script type="text/javascript">
+		jQuery(function($) {
+			if (typeof($.fn.prop) !== 'function') {
+				return; // ignore this for sites with jquery < 1.6
+			}
+			// enable or disable the cdn input field when checking/unchuecking the "use cdn" checkbox
+			var cdn_check = $('#use_cdn'),
+			cdn_location = $('#kblog_mathjax_custom_location');
 
-	cdn_check.change(function(){
-		var checked = cdn_check.is(':checked');
-		cdn_location.prop('disabled',checked);
-	});
-});
-</script>
-EOT;
+			cdn_check.change(function() {
+				var checked = cdn_check.is(':checked');
+				cdn_location.prop('disabled', checked);
+			});
+		});
+		</script>
+	<?php
 	}
 
 	function admin_table_row( $head, $comment, $input, $input_id ) {
