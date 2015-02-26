@@ -53,13 +53,11 @@ class MathJax_Latex_Admin {
 			wp_die( __( 'You do not have sufficient permissions to access this page.' ) );
 		}
 
-		$nonce = wp_nonce_field( 'kblog_mathjax_latex_save_action', 'kblog_mathjax_latex_save_field', true, false );
-
-		$this->table_head( $nonce );
+		$this->table_head();
 
 		// save options if this is a valid post
-		if ( isset( $_POST['kblog_mathjax_latex_save_field'] ) &&
-			wp_verify_nonce( $_POST['kblog_mathjax_latex_save_field'], 'kblog_mathjax_latex_save_action' )
+		if ( isset( $_POST['kblog_mathjax_latex_save_field'] ) && // input var okay
+			wp_verify_nonce( sanitize_text_field( $_POST['kblog_mathjax_latex_save_field'] ), 'kblog_mathjax_latex_save_action' ) // input var okay
 		) {
 			echo "<div class='updated settings-error' id='etting-error-settings_updated'><p><strong>Settings saved.</strong></p></div>\n";
 			$this->admin_save();
@@ -155,65 +153,64 @@ EOT;
 	}
 
 	function admin_save() {
-		update_option( 'kblog_mathjax_force_load', array_key_exists( 'kblog_mathjax_force_load', $_POST ) );
+		update_option( 'kblog_mathjax_force_load', array_key_exists( 'kblog_mathjax_force_load', $_POST ) ); // input var okay
 
-		if ( array_key_exists( 'kblog_mathjax_latex_inline', $_POST ) &&
-			in_array( $_POST['kblog_mathjax_latex_inline'], array( 'inline', 'display' ) )
+		if ( array_key_exists( 'kblog_mathjax_latex_inline', $_POST ) && isset( $_POST['kblog_mathjax_latex_inline'] ) && // input var okay
+			in_array( sanitize_text_field( $_POST['kblog_mathjax_latex_inline'] ), array( 'inline', 'display' ) ) // input var okay
 		) {
-			update_option( 'kblog_mathjax_latex_inline', $_POST['kblog_mathjax_latex_inline'] );
+			update_option( 'kblog_mathjax_latex_inline', sanitize_text_field( $_POST['kblog_mathjax_latex_inline'] ) ); // input var okay
 		}
 
-		update_option( 'kblog_mathjax_use_wplatex_syntax', array_key_exists( 'kblog_mathjax_use_wplatex_syntax', $_POST ) );
+		update_option( 'kblog_mathjax_use_wplatex_syntax', array_key_exists( 'kblog_mathjax_use_wplatex_syntax', $_POST ) ); // input var okay
 
-		update_option( 'kblog_mathjax_use_cdn', array_key_exists( 'kblog_mathjax_use_cdn', $_POST ) );
+		update_option( 'kblog_mathjax_use_cdn', array_key_exists( 'kblog_mathjax_use_cdn', $_POST ) ); // input var okay
 
-		if ( array_key_exists( 'kblog_mathjax_custom_location', $_POST ) ) {
-			update_option( 'kblog_mathjax_custom_location', esc_url_raw( $_POST['kblog_mathjax_custom_location'] ) );
+		if ( array_key_exists( 'kblog_mathjax_custom_location', $_POST ) && isset( $_POST['kblog_mathjax_custom_location'] ) ) { // input var okay
+			update_option( 'kblog_mathjax_custom_location', esc_url_raw( $_POST['kblog_mathjax_custom_location'] ) ); // input var okay
 		}
 
-		if ( array_key_exists( 'kblog_mathjax_config', $_POST ) &&
-			in_array( $_POST['kblog_mathjax_config'], $this->config_options() )
+		if ( array_key_exists( 'kblog_mathjax_config', $_POST ) && isset( $_POST['kblog_mathjax_config'] ) && // input var okay
+			in_array( sanitize_text_field( $_POST['kblog_mathjax_config'] ), $this->config_options() ) // input var okay
 		) {
-			update_option( 'kblog_mathjax_config', $_POST['kblog_mathjax_config'] );
+			update_option( 'kblog_mathjax_config', sanitize_text_field( $_POST['kblog_mathjax_config'] ) ); // input var okay
 		}
 	}
 
-	function table_head( $nonce ) {
-		echo <<<EOT
-<div class="wrap" id="mathjax-latex-options">
-<h2>Mathjax-Latex by Kblog</h2>
-<form id="mathjaxlatex" name="mathjaxlatex" action="" method="POST">
-$nonce
-<table class="form-table">
-<caption class='screen-reader-text'>The following lists configuration options for the MathJax-LaTeX plugin.</caption>
-EOT;
+	function table_head() {
+		?>
+		<div class='wrap' id='mathjax-latex-options'>
+			<h2>Mathjax-Latex by Kblog</h2>
+			<form id='mathjaxlatex' name='mathjaxlatex' action='' method='POST'>
+				<?php wp_nonce_field( 'kblog_mathjax_latex_save_action', 'kblog_mathjax_latex_save_field', true ); ?>
+			<table class='form-table'>
+			<caption class='screen-reader-text'>The following lists configuration options for the MathJax-LaTeX plugin.</caption>
+		<?php
 	}
 
 	function table_foot() {
-		echo <<<EOT
-</table>
+		?>
+		</table>
 
-<p class="submit"><input type="submit" class="button button-primary" value="Save Changes"/></p>
-</form>
+		<p class="submit"><input type="submit" class="button button-primary" value="Save Changes"/></p>
+		</form>
 
-</div>
-<script type="text/javascript">
-jQuery(function($){
-	if(typeof($.fn.prop) !== 'function'){
-		return; // ignore this for sites with jquery < 1.6
-	}
-	// this is to disable or enable the cdn input field when
-	// checking or unchuecking the use cdn checkbox
-	var cdn_check = $('#use_cdn'),
-	cdn_location = $('#kblog_mathjax_custom_location');
+		</div>
+		<script type="text/javascript">
+		jQuery(function($) {
+			if (typeof($.fn.prop) !== 'function') {
+				return; // ignore this for sites with jquery < 1.6
+			}
+			// enable or disable the cdn input field when checking/unchuecking the "use cdn" checkbox
+			var cdn_check = $('#use_cdn'),
+			cdn_location = $('#kblog_mathjax_custom_location');
 
-	cdn_check.change(function(){
-		var checked = cdn_check.is(':checked');
-		cdn_location.prop('disabled',checked);
-	});
-});
-</script>
-EOT;
+			cdn_check.change(function() {
+				var checked = cdn_check.is(':checked');
+				cdn_location.prop('disabled', checked);
+			});
+		});
+		</script>
+	<?php
 	}
 
 	function admin_table_row( $head, $comment, $input, $input_id ) {

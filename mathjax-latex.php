@@ -152,10 +152,11 @@ class MathJax {
 		self::$add_script = true;
 
 		// this gives us an optional "syntax" attribute, which defaults to "inline", but can also be "display"
-		extract( shortcode_atts( array( 'syntax' => get_option( 'kblog_mathjax_latex_inline' ) ), $atts ) );
-		if ( 'inline' === $syntax ) {
+		$shortcode_atts = shortcode_atts( array( 'syntax' => get_option( 'kblog_mathjax_latex_inline' ) ), $atts );
+
+		if ( 'inline' === $shortcode_atts['syntax'] ) {
 			return '\(' . $content . '\)';
-		} else if ( 'display' === $syntax ) {
+		} else if ( 'display' === $shortcode_atts['syntax'] ) {
 			return '\[' . $content . '\]';
 		}
 	}
@@ -276,7 +277,7 @@ class MathJax {
 		}
 
 		$options['extended_valid_elements'] .= ',' . implode( ',' , $extended_tags );
-		$options['extended_valid_elements'] = trim(  $options['extended_valid_elements'] , ',' );
+		$options['extended_valid_elements'] = trim( $options['extended_valid_elements'] , ',' );
 
 		return $options;
 	}
