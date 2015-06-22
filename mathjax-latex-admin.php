@@ -50,7 +50,7 @@ class MathJax_Latex_Admin {
 
 	function plugin_options_menu() {
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( __( 'You do not have sufficient permissions to access this page.' ) );
+			wp_die( __( 'You do not have sufficient permissions to access this page.' ) ); //xss ok
 		}
 
 		$this->table_head();
@@ -126,7 +126,7 @@ EOT;
 		$select_string = "<select name='kblog_mathjax_config' id='kblog_mathjax_config'>\n";
 
 		foreach ( $options as $i ) {
-			$selected = $i === get_option( 'kblog_mathjax_config', 'default' ) ? "selected='true'" : '';
+			$selected = get_option( 'kblog_mathjax_config', 'default' ) === $i ? "selected='true'" : '';
 			$select_string .= "<option value='$i' " . esc_attr( $selected ) . ">$i</option>\n";
 		}
 
