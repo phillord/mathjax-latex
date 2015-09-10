@@ -57,7 +57,7 @@ class MathJax_Latex_Admin {
 
 		// save options if this is a valid post
 		if ( isset( $_POST['kblog_mathjax_latex_save_field'] ) && // input var okay
-			wp_verify_nonce( sanitize_text_field( $_POST['kblog_mathjax_latex_save_field'] ), 'kblog_mathjax_latex_save_action' ) // input var okay
+			wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['kblog_mathjax_latex_save_field'] ) ), 'kblog_mathjax_latex_save_action' ) // input var okay
 		) {
 			echo "<div class='updated settings-error' id='etting-error-settings_updated'><p><strong>Settings saved.</strong></p></div>\n";
 			$this->admin_save();
@@ -156,9 +156,9 @@ EOT;
 		update_option( 'kblog_mathjax_force_load', array_key_exists( 'kblog_mathjax_force_load', $_POST ) ); // input var okay
 
 		if ( array_key_exists( 'kblog_mathjax_latex_inline', $_POST ) && isset( $_POST['kblog_mathjax_latex_inline'] ) && // input var okay
-			in_array( sanitize_text_field( $_POST['kblog_mathjax_latex_inline'] ), array( 'inline', 'display' ) ) // input var okay
+			in_array( sanitize_text_field( wp_unslash( $_POST['kblog_mathjax_latex_inline'] ) ), array( 'inline', 'display' ), true ) // input var okay
 		) {
-			update_option( 'kblog_mathjax_latex_inline', sanitize_text_field( $_POST['kblog_mathjax_latex_inline'] ) ); // input var okay
+			update_option( 'kblog_mathjax_latex_inline', sanitize_text_field( wp_unslash( $_POST['kblog_mathjax_latex_inline'] ) ) ); // input var okay
 		}
 
 		update_option( 'kblog_mathjax_use_wplatex_syntax', array_key_exists( 'kblog_mathjax_use_wplatex_syntax', $_POST ) ); // input var okay
@@ -166,13 +166,13 @@ EOT;
 		update_option( 'kblog_mathjax_use_cdn', array_key_exists( 'kblog_mathjax_use_cdn', $_POST ) ); // input var okay
 
 		if ( array_key_exists( 'kblog_mathjax_custom_location', $_POST ) && isset( $_POST['kblog_mathjax_custom_location'] ) ) { // input var okay
-			update_option( 'kblog_mathjax_custom_location', esc_url_raw( $_POST['kblog_mathjax_custom_location'] ) ); // input var okay
+			update_option( 'kblog_mathjax_custom_location', esc_url_raw( wp_unslash( $_POST['kblog_mathjax_custom_location'] ) ) ); // input var okay
 		}
 
 		if ( array_key_exists( 'kblog_mathjax_config', $_POST ) && isset( $_POST['kblog_mathjax_config'] ) && // input var okay
-			in_array( sanitize_text_field( $_POST['kblog_mathjax_config'] ), $this->config_options() ) // input var okay
+			in_array( sanitize_text_field( wp_unslash( $_POST['kblog_mathjax_config'] ) ), $this->config_options(), true ) // input var okay
 		) {
-			update_option( 'kblog_mathjax_config', sanitize_text_field( $_POST['kblog_mathjax_config'] ) ); // input var okay
+			update_option( 'kblog_mathjax_config', sanitize_text_field( wp_unslash( $_POST['kblog_mathjax_config'] ) ) ); // input var okay
 		}
 	}
 
