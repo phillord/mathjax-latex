@@ -226,7 +226,6 @@ EOT;
 				</tr>
 <?php
 	}
-
 } // class
 
 function mathjax_latex_admin_init() {
