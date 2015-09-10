@@ -232,7 +232,7 @@ class MathJax {
 	public static function filter_br_tags_on_math( $content ) {
 		return preg_replace_callback(
 			'/(<math.*>.*<\/math>)/isU',
-			function ( $matches ) {
+			function( $matches ) {
 				return str_replace( array( '<br/>', '<br />', '<br>' ) , '' , $matches[0] );
 			},
 			$content
