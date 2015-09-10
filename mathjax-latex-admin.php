@@ -75,8 +75,8 @@ class MathJax_Latex_Admin {
 			''
 		);
 
-		$selected_inline  = get_option( 'kblog_mathjax_latex_inline' ) == 'inline' ? 'selected="true"' : '';
-		$selected_display = get_option( 'kblog_mathjax_latex_inline' ) == 'display' ? 'selected="true"' : '';
+		$selected_inline  = get_option( 'kblog_mathjax_latex_inline' ) === 'inline' ? 'selected="true"' : '';
+		$selected_display = get_option( 'kblog_mathjax_latex_inline' ) === 'display' ? 'selected="true"' : '';
 
 		$syntax_input = <<<EOT
 <select name="kblog_mathjax_latex_inline" id="kblog_mathjax_latex_inline">
