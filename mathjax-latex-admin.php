@@ -105,9 +105,7 @@ EOT;
 		$use_cdn = get_option( 'kblog_mathjax_use_cdn', true ) ? 'checked="true"' : '';
 
 		$this->admin_table_row( 'Use MathJax CDN Service?',
-			'Allows use of the MathJax hosted content delivery network.  ' .
-			'By using this, you are agreeing to the ' .
-			'<a href="http://www.mathjax.org/download/mathjax-cdn-terms-of-service/">MathJax CDN Terms of Service</a>.',
+			'Allows use of the MathJax hosted content delivery network. By using this, you are agreeing to the  <a href="http://www.mathjax.org/download/mathjax-cdn-terms-of-service/">MathJax CDN Terms of Service</a>.',
 			"<input type='checkbox' name='kblog_mathjax_use_cdn' id='use_cdn' value='1' $use_cdn/>",
 			'use_cdn'
 		);
