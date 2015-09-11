@@ -172,7 +172,7 @@ class MathJax {
 
 		// initialise option for existing MathJax-LaTeX users
 		if ( get_option( 'kblog_mathjax_use_cdn' ) || ! get_option( 'kblog_mathjax_custom_location' ) ) {
-			$mathjax_location = '//cdn.mathjax.org/mathjax/latest/MathJax.js';
+			$mathjax_location = 'https://cdn.mathjax.org/mathjax/latest/MathJax.js';
 		} else {
 			$mathjax_location = get_option( 'kblog_mathjax_custom_location' );
 		}
@@ -232,7 +232,7 @@ class MathJax {
 	public static function filter_br_tags_on_math( $content ) {
 		return preg_replace_callback(
 			'/(<math.*>.*<\/math>)/isU',
-			function ( $matches ) {
+			function( $matches ) {
 				return str_replace( array( '<br/>', '<br />', '<br>' ) , '' , $matches[0] );
 			},
 			$content
