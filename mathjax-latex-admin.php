@@ -151,6 +151,10 @@ EOT;
 	}
 
 	function admin_save() {
+		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+			check_ajax_referer( 'kblog_mathjax_latex_save_field', 'security' );
+		}
+
 		update_option( 'kblog_mathjax_force_load', array_key_exists( 'kblog_mathjax_force_load', $_POST ) ); // input var okay
 
 		if ( array_key_exists( 'kblog_mathjax_latex_inline', $_POST ) && isset( $_POST['kblog_mathjax_latex_inline'] ) && // input var okay
