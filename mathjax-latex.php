@@ -156,7 +156,7 @@ class MathJax {
 
 		if ( 'inline' === $shortcode_atts['syntax'] ) {
 			return '\(' . $content . '\)';
-		} else if ( 'display' === $shortcode_atts['syntax'] ) {
+		} elseif ( 'display' === $shortcode_atts['syntax'] ) {
 			return '\[' . $content . '\]';
 		}
 	}
