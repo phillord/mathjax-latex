@@ -96,6 +96,7 @@ class MathJax {
 		add_shortcode( 'nomathjax', array( __CLASS__, 'nomathjax_shortcode' ) );
 		add_shortcode( 'latex', array( __CLASS__, 'latex_shortcode' ) );
 		add_action( 'wp_footer', array( __CLASS__, 'add_script' ) );
+		add_filter( 'script_loader_tag', array( __CLASS__, 'script_loader_tag' ), 10, 3 );
 
 		if ( get_option( 'kblog_mathjax_use_wplatex_syntax' ) ) {
 			add_filter( 'the_content', array( __CLASS__, 'inline_to_shortcode' ) );
@@ -168,6 +169,30 @@ class MathJax {
 		$mathjax_url = $mathjax_location . '?config=' . get_option( 'kblog_mathjax_config' );
 
 		wp_enqueue_script( 'mathjax', $mathjax_url, false, MATHJAX_VERSION, false );
+
+		$mathjax_config = apply_filters( 'mathjax_config', array() );
+		if ( $mathjax_config ) {
+			wp_add_inline_script( 'mathjax', 'MathJax.Hub.Config(' . wp_json_encode( $mathjax_config ) . ');' );
+		}
+	}
+
+
+	/**
+	 * Set the script tag to have type text/x-mathjax-config
+	 *
+	 * @param string $tag    The `<script>` tag for the enqueued script.
+	 * @param string $handle The script's registered handle.
+	 * @param string $src    The script's source URL.
+	 *
+	 * @return string $tag
+	 */
+	public static function script_loader_tag( $tag, $handle = null, $src = null ) {
+		if ( 'mathjax' === $handle ) {
+			// replace the <script> tag for the inline script, but not for the <script> tag with src=""
+			return str_replace( "<script type='text/javascript'>", "<script type='text/x-mathjax-config'>", $tag );
+		}
+
+		return $tag;
 	}
 
 	public static function inline_to_shortcode( $content ) {
