@@ -32,6 +32,8 @@
  * along with this program. If not, see http://www.gnu.org/licenses/.
  */
 
+define( 'MATHJAX_VERSION', '1.3.4' );
+
 require_once( dirname( __FILE__ ) . '/mathjax-latex-admin.php' );
 
 class MathJax {
@@ -165,7 +167,7 @@ class MathJax {
 
 		$mathjax_url = $mathjax_location . '?config=' . get_option( 'kblog_mathjax_config' );
 
-		wp_enqueue_script( 'mathjax', $mathjax_url, false, '1.2.1', false );
+		wp_enqueue_script( 'mathjax', $mathjax_url, false, MATHJAX_VERSION, false );
 	}
 
 	public static function inline_to_shortcode( $content ) {
