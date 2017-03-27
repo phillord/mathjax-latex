@@ -2,7 +2,7 @@
 /*
  Plugin Name: MathJax-LaTeX
  Description: Transform latex equations in JavaScript using mathjax
- Version: 1.3.4
+ Version: 1.3.5
  Author: Phillip Lord, Simon Cockell, Paul Schreiber
  Author URI: http://knowledgeblog.org
 
@@ -32,7 +32,7 @@
  * along with this program. If not, see http://www.gnu.org/licenses/.
  */
 
-define( 'MATHJAX_VERSION', '1.3.4' );
+define( 'MATHJAX_VERSION', '1.3.5' );
 
 require_once( dirname( __FILE__ ) . '/mathjax-latex-admin.php' );
 
