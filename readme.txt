@@ -3,8 +3,8 @@
 Contributors: philliplord, sjcockell, knowledgeblog, d_swan, paulschreiber, jwenerd
 Tags: mathematics, math, latex, mathml, mathjax, science, res-comms, scholar, academic
 Requires at least: 3.0
-Tested up to: 4.3
-Stable tag: 1.3.4
+Tested up to: 4.7.3
+Stable tag: 1.3.5
 License: GPLv3
 
 This plugin enables mathjax (http://www.mathjax.org) functionality for
@@ -59,6 +59,10 @@ MathJax-LaTeX is developed on
 
 
 == Changelog ==
+
+= 1.3.5 =
+
+1. Add support for MathJax config via filter
 
 = 1.3.4 =
 
