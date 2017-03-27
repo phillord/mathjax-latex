@@ -94,7 +94,6 @@ class MathJax {
 		add_shortcode( 'nomathjax', array( __CLASS__, 'nomathjax_shortcode' ) );
 		add_shortcode( 'latex', array( __CLASS__, 'latex_shortcode' ) );
 		add_action( 'wp_footer', array( __CLASS__, 'add_script' ) );
-		add_action( 'wp_footer', array( __CLASS__, 'unconditional' ) );
 
 		if ( get_option( 'kblog_mathjax_use_wplatex_syntax' ) ) {
 			add_filter( 'the_content', array( __CLASS__, 'inline_to_shortcode' ) );
@@ -125,19 +124,6 @@ class MathJax {
 		delete_option( 'kblog_mathjax_use_cdn' );
 		delete_option( 'kblog_mathjax_custom_location' );
 		delete_option( 'kblog_mathjax_config' );
-	}
-
-	public static function unconditional() {
-		echo '<!-- MathJax Latex Plugin installed';
-		if ( ! self::$add_script ) {
-			echo ': Disabled as no shortcodes on this page';
-		}
-
-		if ( self::$block_script ) {
-			echo ': Disabled by nomathjax shortcode';
-		}
-
-		echo ' -->';
 	}
 
 	public static function mathjax_shortcode( $atts, $content ) {
