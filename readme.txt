@@ -25,8 +25,7 @@ You can use wp-latex syntax, $latex E=mc^2$. Parameters can be specified as with
 
 You can also specify [nomathjax] -- this will block mathjax on the current page, regardless of other tags.
 
-MathJax-LaTeX is developed on
-[Github](https://github.com/phillord/mathjax-latex).
+MathJax-LaTeX is developed on [GitHub](https://github.com/phillord/mathjax-latex).
 
 == Installation ==
 
