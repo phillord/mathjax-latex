@@ -1,15 +1,15 @@
 <?php
-/*
- Plugin Name: MathJax-LaTeX
- Description: Transform latex equations in JavaScript using mathjax
  Version: 1.3.6
- Author: Phillip Lord, Simon Cockell, Paul Schreiber
- Author URI: http://knowledgeblog.org
-
- Copyright 2010. Phillip Lord (phillip.lord@newcastle.ac.uk)
- Simon Cockell (s.j.cockell@newcastle.ac.uk)
- Newcastle University.
- Paul Schreiber (paulschreiber@gmail.com)
+/**
+ * Plugin Name: MathJax-LaTeX
+ * Description: Transform latex equations in JavaScript using mathjax
+ * Author: Phillip Lord, Simon Cockell, Paul Schreiber
+ * Author URI: http://knowledgeblog.org
+ *
+ * Copyright 2010. Phillip Lord (phillip.lord@newcastle.ac.uk)
+ * Simon Cockell (s.j.cockell@newcastle.ac.uk)
+ * Newcastle University.
+ * Paul Schreiber (paulschreiber@gmail.com)
 */
 
 /*
@@ -34,12 +34,12 @@
 
 define( 'MATHJAX_VERSION', '1.3.6' );
 
-require_once( dirname( __FILE__ ) . '/mathjax-latex-admin.php' );
+require_once dirname( __FILE__ ) . '/mathjax-latex-admin.php';
 
 class MathJax {
-	static $add_script;
-	static $block_script;
-	static $mathml_tags = array(
+	public static $add_script;
+	public static $block_script;
+	public static $mathml_tags = array(
 		'math'           => array( 'class', 'id', 'style', 'dir', 'href', 'mathbackground', 'mathcolor', 'display', 'overflow', 'xmlns' ),
 		'maction'        => array( 'actiontype', 'class', 'id', 'style', 'href', 'mathbackground', 'mathcolor', 'selection' ),
 		'maligngroup'    => array(),
@@ -107,7 +107,7 @@ class MathJax {
 		add_filter( 'the_content', array( __CLASS__, 'filter_br_tags_on_math' ) );
 
 		add_action( 'init', array( __CLASS__, 'allow_mathml_tags' ) );
-		add_filter( 'tiny_mce_before_init',  array( __CLASS__, 'allow_mathml_tags_in_tinymce' ) );
+		add_filter( 'tiny_mce_before_init', array( __CLASS__, 'allow_mathml_tags_in_tinymce' ) );
 	}
 
 	// registers default options
@@ -141,7 +141,11 @@ class MathJax {
 		self::$add_script = true;
 
 		// this gives us an optional "syntax" attribute, which defaults to "inline", but can also be "display"
-		$shortcode_atts = shortcode_atts( array( 'syntax' => get_option( 'kblog_mathjax_latex_inline' ) ), $atts );
+		$shortcode_atts = shortcode_atts(
+			array(
+				'syntax' => get_option( 'kblog_mathjax_latex_inline' ),
+			), $atts
+		);
 
 		if ( 'inline' === $shortcode_atts['syntax'] ) {
 			return '\(' . $content . '\)';
@@ -246,7 +250,7 @@ class MathJax {
 		return preg_replace_callback(
 			'/(<math.*>.*<\/math>)/isU',
 			function( $matches ) {
-				return str_replace( array( '<br/>', '<br />', '<br>' ) , '' , $matches[0] );
+				return str_replace( array( '<br/>', '<br />', '<br>' ), '', $matches[0] );
 			},
 			$content
 		);
@@ -279,7 +283,7 @@ class MathJax {
 
 		foreach ( self::$mathml_tags as $tag => $attributes ) {
 			if ( ! empty( $attributes ) ) {
-				$tag = $tag . '[' . implode( '|' ,  $attributes ) . ']';
+				$tag = $tag . '[' . implode( '|', $attributes ) . ']';
 			}
 
 			$extended_tags[] = $tag;
@@ -289,8 +293,8 @@ class MathJax {
 			$options['extended_valid_elements'] = '';
 		}
 
-		$options['extended_valid_elements'] .= ',' . implode( ',' , $extended_tags );
-		$options['extended_valid_elements'] = trim( $options['extended_valid_elements'] , ',' );
+		$options['extended_valid_elements'] .= ',' . implode( ',', $extended_tags );
+		$options['extended_valid_elements']  = trim( $options['extended_valid_elements'], ',' );
 
 		return $options;
 	}
