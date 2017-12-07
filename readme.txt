@@ -3,8 +3,8 @@
 Contributors: philliplord, sjcockell, knowledgeblog, d_swan, paulschreiber, jwenerd
 Tags: mathematics, math, latex, mathml, mathjax, science, res-comms, scholar, academic
 Requires at least: 3.0
-Tested up to: 4.8.1
-Stable tag: 1.3.7
+Tested up to: 4.9.1
+Stable tag: 1.3.8
 Requires PHP: 5.4.0
 License: GPLv2
 
@@ -33,6 +33,10 @@ MathJax-LaTeX is developed on [GitHub](https://github.com/phillord/mathjax-latex
 1. Activate the plugin through the 'Plugins' menu in WordPress
 
 == Changelog ==
+
+= 1.3.8 =
+
+1. Code style changes, per PHPCS 3.1.1 and WPCS 0.14
 
 = 1.3.7 =
 
