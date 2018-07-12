@@ -39,75 +39,75 @@ require_once dirname( __FILE__ ) . '/mathjax-latex-admin.php';
 class MathJax {
 	public static $add_script;
 	public static $block_script;
-	public static $mathml_tags = array(
-		'math'           => array( 'class', 'id', 'style', 'dir', 'href', 'mathbackground', 'mathcolor', 'display', 'overflow', 'xmlns' ),
-		'maction'        => array( 'actiontype', 'class', 'id', 'style', 'href', 'mathbackground', 'mathcolor', 'selection' ),
-		'maligngroup'    => array(),
-		'malignmark'     => array(),
-		'menclose'       => array( 'class', 'id', 'style', 'href', 'mathbackground', 'mathcolor', 'notation' ),
-		'merror'         => array( 'class', 'id', 'style', 'href', 'mathbackground', 'mathcolor' ),
-		'mfenced'        => array( 'class', 'id', 'style', 'close', 'href', 'mathbackground', 'mathcolor', 'open', 'separators' ),
-		'mfrac'          => array( 'bevelled', 'class', 'id', 'style', 'denomalign', 'href', 'linethickness', 'mathbackground', 'mathcolor', 'numalign' ),
-		'mglyph'         => array( 'alt', 'class', 'id', 'style', 'height', 'href', 'mathbackground', 'src', 'valign', 'width' ),
-		'mi'             => array( 'class', 'id', 'style', 'href', 'mathbackground', 'mathcolor', 'mathsize', 'mathvariant' ),
-		'mlabeledtr'     => array( 'class', 'id', 'style', 'columnalign', 'groupalign', 'href', 'mathbackground', 'mathcolor', 'rowalign' ),
-		'mlongdiv'       => array(),
-		'mmultiscripts'  => array( 'class', 'id', 'style', 'href', 'mathbackground', 'mathcolor', 'subscriptshift', 'superscriptshift' ),
-		'mn'             => array( 'class', 'id', 'style', 'dir', 'href', 'mathbackground', 'mathcolor', 'mathsize', 'mathvariant' ),
-		'mo'             => array( 'accent', 'class', 'id', 'style', 'dir', 'fence', 'form', 'href', 'largeop', 'lspace', 'mathbackground', 'mathcolor', 'mathsize', 'mathvariant', 'maxsize', 'minsize', 'moveablelimits', 'rspace', 'separator', 'stretchy', 'symmetric' ),
-		'mover'          => array( 'accent', 'align', 'class', 'id', 'style', 'href', 'mathbackground', 'mathcolor' ),
-		'mpadded'        => array( 'class', 'id', 'style', 'depth', 'height', 'href', 'lspace', 'mathbackground', 'mathcolor', 'voffset', 'width' ),
-		'mphantom'       => array( 'class', 'id', 'style', 'mathbackground' ),
-		'mroot'          => array( 'class', 'id', 'style', 'href', 'mathbackground', 'mathcolor' ),
-		'mrow'           => array( 'class', 'id', 'style', 'dir', 'href', 'mathbackground', 'mathcolor' ),
-		'ms'             => array( 'class', 'id', 'style', 'dir', 'lquote', 'href', 'mathbackground', 'mathcolor', 'mathsize', 'mathvariant', 'rquote' ),
-		'mscarries'      => array(),
-		'mscarry'        => array(),
-		'msgroup'        => array(),
-		'msline'         => array(),
-		'mspace'         => array( 'class', 'id', 'style', 'depth', 'height', 'linebreak', 'mathbackground', 'width' ),
-		'msqrt'          => array( 'class', 'id', 'style', 'href', 'mathbackground', 'mathcolor' ),
-		'msrow'          => array(),
-		'mstack'         => array(),
-		'mstyle'         => array( 'dir', 'decimalpoint', 'displaystyle', 'infixlinebreakstyle', 'scriptlevel', 'scriptminsize', 'scriptsizemultiplier' ),
-		'msub'           => array( 'class', 'id', 'style', 'mathbackground', 'mathcolor', 'subscriptshift' ),
-		'msubsup'        => array( 'class', 'id', 'style', 'href', 'mathbackground', 'mathcolor', 'subscriptshift', 'superscriptshift' ),
-		'msup'           => array( 'class', 'id', 'style', 'href', 'mathbackground', 'mathcolor', 'superscriptshift' ),
-		'mtable'         => array( 'class', 'id', 'style', 'align', 'alignmentscope', 'columnalign', 'columnlines', 'columnspacing', 'columnwidth', 'displaystyle', 'equalcolumns', 'equalrows', 'frame', 'framespacing', 'groupalign', 'href', 'mathbackground', 'mathcolor', 'minlabelspacing', 'rowalign', 'rowlines', 'rowspacing', 'side', 'width' ),
-		'mtd'            => array( 'class', 'id', 'style', 'columnalign', 'columnspan', 'groupalign', 'href', 'mathbackground', 'mathcolor', 'rowalign', 'rowspan' ),
-		'mtext'          => array( 'class', 'id', 'style', 'dir', 'href', 'mathbackground', 'mathcolor', 'mathsize', 'mathvariant' ),
-		'mtr'            => array( 'class', 'id', 'style', 'columnalign', 'groupalign', 'href', 'mathbackground', 'mathcolor', 'rowalign' ),
-		'munder'         => array( 'accentunder', 'align', 'class', 'id', 'style', 'mathbackground', 'mathcolor' ),
-		'munderover'     => array( 'accent', 'accentunder', 'align', 'class', 'id', 'style', 'href', 'mathbackground', 'mathcolor' ),
-		'semantics'      => array( 'definitionURL', 'encoding', 'cd', 'name', 'src' ),
-		'annotation'     => array( 'definitionURL', 'encoding', 'cd', 'name', 'src' ),
-		'annotation-xml' => array( 'definitionURL', 'encoding', 'cd', 'name', 'src' ),
-	);
+	public static $mathml_tags = [
+		'math'           => [ 'class', 'id', 'style', 'dir', 'href', 'mathbackground', 'mathcolor', 'display', 'overflow', 'xmlns' ],
+		'maction'        => [ 'actiontype', 'class', 'id', 'style', 'href', 'mathbackground', 'mathcolor', 'selection' ],
+		'maligngroup'    => [],
+		'malignmark'     => [],
+		'menclose'       => [ 'class', 'id', 'style', 'href', 'mathbackground', 'mathcolor', 'notation' ],
+		'merror'         => [ 'class', 'id', 'style', 'href', 'mathbackground', 'mathcolor' ],
+		'mfenced'        => [ 'class', 'id', 'style', 'close', 'href', 'mathbackground', 'mathcolor', 'open', 'separators' ],
+		'mfrac'          => [ 'bevelled', 'class', 'id', 'style', 'denomalign', 'href', 'linethickness', 'mathbackground', 'mathcolor', 'numalign' ],
+		'mglyph'         => [ 'alt', 'class', 'id', 'style', 'height', 'href', 'mathbackground', 'src', 'valign', 'width' ],
+		'mi'             => [ 'class', 'id', 'style', 'href', 'mathbackground', 'mathcolor', 'mathsize', 'mathvariant' ],
+		'mlabeledtr'     => [ 'class', 'id', 'style', 'columnalign', 'groupalign', 'href', 'mathbackground', 'mathcolor', 'rowalign' ],
+		'mlongdiv'       => [],
+		'mmultiscripts'  => [ 'class', 'id', 'style', 'href', 'mathbackground', 'mathcolor', 'subscriptshift', 'superscriptshift' ],
+		'mn'             => [ 'class', 'id', 'style', 'dir', 'href', 'mathbackground', 'mathcolor', 'mathsize', 'mathvariant' ],
+		'mo'             => [ 'accent', 'class', 'id', 'style', 'dir', 'fence', 'form', 'href', 'largeop', 'lspace', 'mathbackground', 'mathcolor', 'mathsize', 'mathvariant', 'maxsize', 'minsize', 'moveablelimits', 'rspace', 'separator', 'stretchy', 'symmetric' ],
+		'mover'          => [ 'accent', 'align', 'class', 'id', 'style', 'href', 'mathbackground', 'mathcolor' ],
+		'mpadded'        => [ 'class', 'id', 'style', 'depth', 'height', 'href', 'lspace', 'mathbackground', 'mathcolor', 'voffset', 'width' ],
+		'mphantom'       => [ 'class', 'id', 'style', 'mathbackground' ],
+		'mroot'          => [ 'class', 'id', 'style', 'href', 'mathbackground', 'mathcolor' ],
+		'mrow'           => [ 'class', 'id', 'style', 'dir', 'href', 'mathbackground', 'mathcolor' ],
+		'ms'             => [ 'class', 'id', 'style', 'dir', 'lquote', 'href', 'mathbackground', 'mathcolor', 'mathsize', 'mathvariant', 'rquote' ],
+		'mscarries'      => [],
+		'mscarry'        => [],
+		'msgroup'        => [],
+		'msline'         => [],
+		'mspace'         => [ 'class', 'id', 'style', 'depth', 'height', 'linebreak', 'mathbackground', 'width' ],
+		'msqrt'          => [ 'class', 'id', 'style', 'href', 'mathbackground', 'mathcolor' ],
+		'msrow'          => [],
+		'mstack'         => [],
+		'mstyle'         => [ 'dir', 'decimalpoint', 'displaystyle', 'infixlinebreakstyle', 'scriptlevel', 'scriptminsize', 'scriptsizemultiplier' ],
+		'msub'           => [ 'class', 'id', 'style', 'mathbackground', 'mathcolor', 'subscriptshift' ],
+		'msubsup'        => [ 'class', 'id', 'style', 'href', 'mathbackground', 'mathcolor', 'subscriptshift', 'superscriptshift' ],
+		'msup'           => [ 'class', 'id', 'style', 'href', 'mathbackground', 'mathcolor', 'superscriptshift' ],
+		'mtable'         => [ 'class', 'id', 'style', 'align', 'alignmentscope', 'columnalign', 'columnlines', 'columnspacing', 'columnwidth', 'displaystyle', 'equalcolumns', 'equalrows', 'frame', 'framespacing', 'groupalign', 'href', 'mathbackground', 'mathcolor', 'minlabelspacing', 'rowalign', 'rowlines', 'rowspacing', 'side', 'width' ],
+		'mtd'            => [ 'class', 'id', 'style', 'columnalign', 'columnspan', 'groupalign', 'href', 'mathbackground', 'mathcolor', 'rowalign', 'rowspan' ],
+		'mtext'          => [ 'class', 'id', 'style', 'dir', 'href', 'mathbackground', 'mathcolor', 'mathsize', 'mathvariant' ],
+		'mtr'            => [ 'class', 'id', 'style', 'columnalign', 'groupalign', 'href', 'mathbackground', 'mathcolor', 'rowalign' ],
+		'munder'         => [ 'accentunder', 'align', 'class', 'id', 'style', 'mathbackground', 'mathcolor' ],
+		'munderover'     => [ 'accent', 'accentunder', 'align', 'class', 'id', 'style', 'href', 'mathbackground', 'mathcolor' ],
+		'semantics'      => [ 'definitionURL', 'encoding', 'cd', 'name', 'src' ],
+		'annotation'     => [ 'definitionURL', 'encoding', 'cd', 'name', 'src' ],
+		'annotation-xml' => [ 'definitionURL', 'encoding', 'cd', 'name', 'src' ],
+	];
 
 	public static function init() {
-		register_activation_hook( __FILE__, array( __CLASS__, 'mathjax_install' ) );
-		register_deactivation_hook( __FILE__, array( __CLASS__, 'mathjax_uninstall' ) );
+		register_activation_hook( __FILE__, [ __CLASS__, 'mathjax_install' ] );
+		register_deactivation_hook( __FILE__, [ __CLASS__, 'mathjax_uninstall' ] );
 
 		if ( get_option( 'kblog_mathjax_force_load' ) ) {
 			self::$add_script = true;
 		}
 
-		add_shortcode( 'mathjax', array( __CLASS__, 'mathjax_shortcode' ) );
-		add_shortcode( 'nomathjax', array( __CLASS__, 'nomathjax_shortcode' ) );
-		add_shortcode( 'latex', array( __CLASS__, 'latex_shortcode' ) );
-		add_action( 'wp_footer', array( __CLASS__, 'add_script' ) );
-		add_filter( 'script_loader_tag', array( __CLASS__, 'script_loader_tag' ), 10, 3 );
+		add_shortcode( 'mathjax', [ __CLASS__, 'mathjax_shortcode' ] );
+		add_shortcode( 'nomathjax', [ __CLASS__, 'nomathjax_shortcode' ] );
+		add_shortcode( 'latex', [ __CLASS__, 'latex_shortcode' ] );
+		add_action( 'wp_footer', [ __CLASS__, 'add_script' ] );
+		add_filter( 'script_loader_tag', [ __CLASS__, 'script_loader_tag' ], 10, 3 );
 
 		if ( get_option( 'kblog_mathjax_use_wplatex_syntax' ) ) {
-			add_filter( 'the_content', array( __CLASS__, 'inline_to_shortcode' ) );
+			add_filter( 'the_content', [ __CLASS__, 'inline_to_shortcode' ] );
 		}
 
-		add_filter( 'plugin_action_links', array( __CLASS__, 'mathjax_settings_link' ), 9, 2 );
+		add_filter( 'plugin_action_links', [ __CLASS__, 'mathjax_settings_link' ], 9, 2 );
 
-		add_filter( 'the_content', array( __CLASS__, 'filter_br_tags_on_math' ) );
+		add_filter( 'the_content', [ __CLASS__, 'filter_br_tags_on_math' ] );
 
-		add_action( 'init', array( __CLASS__, 'allow_mathml_tags' ) );
-		add_filter( 'tiny_mce_before_init', array( __CLASS__, 'allow_mathml_tags_in_tinymce' ) );
+		add_action( 'init', [ __CLASS__, 'allow_mathml_tags' ] );
+		add_filter( 'tiny_mce_before_init', [ __CLASS__, 'allow_mathml_tags_in_tinymce' ] );
 	}
 
 	// registers default options
@@ -142,9 +142,9 @@ class MathJax {
 
 		// this gives us an optional "syntax" attribute, which defaults to "inline", but can also be "display"
 		$shortcode_atts = shortcode_atts(
-			array(
+			[
 				'syntax' => get_option( 'kblog_mathjax_latex_inline' ),
-			), $atts
+			], $atts
 		);
 
 		if ( 'inline' === $shortcode_atts['syntax'] ) {
@@ -174,7 +174,7 @@ class MathJax {
 
 		wp_enqueue_script( 'mathjax', $mathjax_url, false, MATHJAX_VERSION, false );
 
-		$mathjax_config = apply_filters( 'mathjax_config', array() );
+		$mathjax_config = apply_filters( 'mathjax_config', [] );
 		if ( $mathjax_config ) {
 			wp_add_inline_script( 'mathjax', 'MathJax.Hub.Config(' . wp_json_encode( $mathjax_config ) . ');' );
 		}
@@ -206,7 +206,7 @@ class MathJax {
 
 		self::$add_script = true;
 
-		return preg_replace_callback( '#\$latex[= ](.*?[^\\\\])\$#', array( __CLASS__, 'inline_to_shortcode_callback' ), $content );
+		return preg_replace_callback( '#\$latex[= ](.*?[^\\\\])\$#', [ __CLASS__, 'inline_to_shortcode_callback' ], $content );
 	}
 
 	public static function inline_to_shortcode_callback( $matches ) {
@@ -250,7 +250,7 @@ class MathJax {
 		return preg_replace_callback(
 			'/(<math.*>.*<\/math>)/isU',
 			function( $matches ) {
-				return str_replace( array( '<br/>', '<br />', '<br>' ), '', $matches[0] );
+				return str_replace( [ '<br/>', '<br />', '<br>' ], '', $matches[0] );
 			},
 			$content
 		);
@@ -265,7 +265,7 @@ class MathJax {
 		global $allowedposttags;
 
 		foreach ( self::$mathml_tags as $tag => $attributes ) {
-			$allowedposttags[ $tag ] = array();
+			$allowedposttags[ $tag ] = [];
 
 			foreach ( $attributes as $a ) {
 				$allowedposttags[ $tag ][ $a ] = true;
@@ -279,7 +279,7 @@ class MathJax {
 	 */
 	public static function allow_mathml_tags_in_tinymce( $options ) {
 
-		$extended_tags = array();
+		$extended_tags = [];
 
 		foreach ( self::$mathml_tags as $tag => $attributes ) {
 			if ( ! empty( $attributes ) ) {

@@ -21,31 +21,31 @@
 
 class MathJax_Latex_Admin {
 
-	public static $admin_tags = array(
-		'input'  => array(
-			'type'     => array(),
-			'name'     => array(),
-			'id'       => array(),
-			'disabled' => array(),
-			'value'    => array(),
-			'checked'  => array(),
-		),
-		'select' => array(
-			'name' => array(),
-			'id'   => array(),
-		),
-		'option' => array(
-			'value'    => array(),
-			'selected' => array(),
-		),
-	);
+	public static $admin_tags = [
+		'input'  => [
+			'type'     => [],
+			'name'     => [],
+			'id'       => [],
+			'disabled' => [],
+			'value'    => [],
+			'checked'  => [],
+		],
+		'select' => [
+			'name' => [],
+			'id'   => [],
+		],
+		'option' => [
+			'value'    => [],
+			'selected' => [],
+		],
+	];
 
 	public function __construct() {
-		add_action( 'admin_menu', array( $this, 'admin_page_init' ) );
+		add_action( 'admin_menu', [ $this, 'admin_page_init' ] );
 	}
 
 	public function admin_page_init() {
-		add_options_page( 'MathJax-LaTeX', 'MathJax-LaTeX', 'manage_options', 'kblog-mathjax-latex', array( $this, 'plugin_options_menu' ) );
+		add_options_page( 'MathJax-LaTeX', 'MathJax-LaTeX', 'manage_options', 'kblog-mathjax-latex', [ $this, 'plugin_options_menu' ] );
 	}
 
 	public function plugin_options_menu() {
@@ -146,12 +146,12 @@ EOT;
 	}
 
 	public function config_options() {
-		$options = array(
+		$options = [
 			'default',
 			'Accessible',
 			'TeX-AMS_HTML',
 			'TeX-AMS-MML_HTMLorMML',
-		);
+		];
 
 		return $options;
 	}
@@ -164,7 +164,7 @@ EOT;
 		update_option( 'kblog_mathjax_force_load', array_key_exists( 'kblog_mathjax_force_load', $_POST ) ); // input var okay
 
 		if ( array_key_exists( 'kblog_mathjax_latex_inline', $_POST ) && isset( $_POST['kblog_mathjax_latex_inline'] ) && // input var okay
-			in_array( sanitize_text_field( wp_unslash( $_POST['kblog_mathjax_latex_inline'] ) ), array( 'inline', 'display' ), true ) // input var okay
+			in_array( sanitize_text_field( wp_unslash( $_POST['kblog_mathjax_latex_inline'] ) ), [ 'inline', 'display' ], true ) // input var okay
 		) {
 			update_option( 'kblog_mathjax_latex_inline', sanitize_text_field( wp_unslash( $_POST['kblog_mathjax_latex_inline'] ) ) ); // input var okay
 		}
