@@ -218,7 +218,7 @@ EOT;
 			});
 		});
 		</script>
-	<?php
+		<?php
 	}
 
 	public function admin_table_row( $head, $comment, $input, $input_id ) {
@@ -232,7 +232,7 @@ EOT;
 						<p class="description"><?php echo wp_kses_post( $comment ); ?></p>
 					</td>
 				</tr>
-<?php
+		<?php
 	}
 } // class
 
