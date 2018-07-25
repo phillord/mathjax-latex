@@ -234,13 +234,14 @@ class MathJax_Latex {
 	 * @return string without <br /> tags
 	 */
 	public static function filter_br_tags_on_math( $content ) {
-		return preg_replace_callback(
+		$filtered_content = preg_replace_callback(
 			'/(<math.*>.*<\/math>)/isU',
 			function( $matches ) {
-				return str_replace( [ '<br/>', '<br />', '<br>' ], '', $matches[0] );
+				return str_replace( array( '<br/>', '<br />', '<br>' ), '', $matches[0] );
 			},
 			$content
 		);
+		return null === $filtered_content ? $content : $filtered_content;
 	}
 
 	/**
