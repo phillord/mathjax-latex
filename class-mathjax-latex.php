@@ -21,7 +21,7 @@
 
 define( 'MATHJAX_VERSION', '1.3.9' );
 
-require_once dirname( __FILE__ ) . '/mathjax-latex-admin.php';
+require_once __DIR__ . '/class-mathjax-latex-admin.php';
 
 class MathJax_Latex {
 	public static $add_script;
