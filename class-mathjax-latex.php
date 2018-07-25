@@ -287,4 +287,4 @@ class MathJax_Latex {
 	}
 }
 
-MathJax::init();
+MathJax_Latex::init();
