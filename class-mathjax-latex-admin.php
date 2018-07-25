@@ -21,34 +21,34 @@
 
 class MathJax_Latex_Admin {
 
-	static $admin_tags = array(
-		'input' => array(
-			'type' => array(),
-			'name' => array(),
-			'id' => array(),
-			'disabled' => array(),
-			'value' => array(),
-			'checked' => array(),
-		),
-		'select' => array(
-			'name' => array(),
-			'id' => array(),
-		),
-		'option' => array(
-			'value' => array(),
-			'selected' => array(),
-		),
-	);
+	public static $admin_tags = [
+		'input'  => [
+			'type'     => [],
+			'name'     => [],
+			'id'       => [],
+			'disabled' => [],
+			'value'    => [],
+			'checked'  => [],
+		],
+		'select' => [
+			'name' => [],
+			'id'   => [],
+		],
+		'option' => [
+			'value'    => [],
+			'selected' => [],
+		],
+	];
 
-	function __construct() {
-		add_action( 'admin_menu', array( $this, 'admin_page_init' ) );
+	public function __construct() {
+		add_action( 'admin_menu', [ $this, 'admin_page_init' ] );
 	}
 
-	function admin_page_init() {
-		add_options_page( 'MathJax-LaTeX', 'MathJax-LaTeX', 'manage_options', 'kblog-mathjax-latex', array( $this, 'plugin_options_menu' ) );
+	public function admin_page_init() {
+		add_options_page( 'MathJax-LaTeX', 'MathJax-LaTeX', 'manage_options', 'kblog-mathjax-latex', [ $this, 'plugin_options_menu' ] );
 	}
 
-	function plugin_options_menu() {
+	public function plugin_options_menu() {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_die( __( 'You do not have sufficient permissions to access this page.' ) ); //xss ok
 		}
@@ -69,7 +69,8 @@ class MathJax_Latex_Admin {
 			$checked_force_load = 'checked="true"';
 		}
 
-		$this->admin_table_row( 'Force Load',
+		$this->admin_table_row(
+			'Force Load',
 			'Force the MathJax JavaScript to be loaded on every post. This removes the need to use the [mathjax] shortcode.',
 			"<input type='checkbox' name='kblog_mathjax_force_load' id='kblog_mathjax_force_load' value='1' $checked_force_load />",
 			''
@@ -85,7 +86,8 @@ class MathJax_Latex_Admin {
 </select>
 EOT;
 
-		$this->admin_table_row( 'Default [latex] syntax attribute.',
+		$this->admin_table_row(
+			'Default [latex] syntax attribute.',
 			"By default, the [latex] shortcode renders equations using the MathJax 'inline' syntax.",
 			$syntax_input,
 			'kblog_mathjax_latex_inline'
@@ -96,7 +98,8 @@ EOT;
 
 		$use_wp_latex_syntax = get_option( 'kblog_mathjax_use_wplatex_syntax', false ) ? "checked='true'" : '';
 
-		$this->admin_table_row( 'Use wp-latex syntax?',
+		$this->admin_table_row(
+			'Use wp-latex syntax?',
 			"Allows use of the \$latex$ syntax, but conflicts with wp-latex. $wp_latex_disabled_warning",
 			"<input type='checkbox' name='kblog_mathjax_use_wplatex_syntax' id='kblog_mathjax_use_wplatex_syntax' $wp_latex_disabled $use_wp_latex_syntax value='1'/>",
 			'kblog_mathjax_use_wplatex_syntax'
@@ -104,7 +107,8 @@ EOT;
 
 		$use_cdn = get_option( 'kblog_mathjax_use_cdn', true ) ? 'checked="true"' : '';
 
-		$this->admin_table_row( 'Use MathJax CDN Service?',
+		$this->admin_table_row(
+			'Use MathJax CDN Service?',
 			'Allows use of the MathJax hosted content delivery network. By using this, you are agreeing to the  <a href="http://www.mathjax.org/download/mathjax-cdn-terms-of-service/">MathJax CDN Terms of Service</a>.',
 			"<input type='checkbox' name='kblog_mathjax_use_cdn' id='use_cdn' value='1' $use_cdn/>",
 			'use_cdn'
@@ -113,7 +117,8 @@ EOT;
 		$custom_location_disabled = get_option( 'kblog_mathjax_use_cdn', true ) ? 'disabled="disabled"' : '';
 		$custom_location          = "value='" . esc_attr( get_option( 'kblog_mathjax_custom_location', '' ) ) . "'";
 
-		$this->admin_table_row( 'Custom MathJax location?',
+		$this->admin_table_row(
+			'Custom MathJax location?',
 			'If you are not using the MathJax CDN enter the location of your MathJax script.',
 			"<input type='textbox' name='kblog_mathjax_custom_location' id='kblog_mathjax_custom_location' $custom_location $custom_location_disabled>",
 			'kblog_mathjax_custom_location'
@@ -124,13 +129,14 @@ EOT;
 		$select_string = "<select name='kblog_mathjax_config' id='kblog_mathjax_config'>\n";
 
 		foreach ( $options as $i ) {
-			$selected = get_option( 'kblog_mathjax_config', 'default' ) === $i ? "selected='true'" : '';
+			$selected       = get_option( 'kblog_mathjax_config', 'default' ) === $i ? "selected='true'" : '';
 			$select_string .= "<option value='$i' " . esc_attr( $selected ) . ">$i</option>\n";
 		}
 
 		$select_string .= '</select>';
 
-		$this->admin_table_row( 'MathJax Configuration',
+		$this->admin_table_row(
+			'MathJax Configuration',
 			"See the <a href='http://docs.mathjax.org/en/v1.1-latest/configuration.html#loading'>MathJax documentation</a> for more details.",
 			$select_string,
 			'kblog_mathjax_config'
@@ -139,18 +145,18 @@ EOT;
 		$this->table_foot();
 	}
 
-	function config_options() {
-		$options = array(
+	public function config_options() {
+		$options = [
 			'default',
 			'Accessible',
 			'TeX-AMS_HTML',
 			'TeX-AMS-MML_HTMLorMML',
-		);
+		];
 
 		return $options;
 	}
 
-	function admin_save() {
+	public function admin_save() {
 		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 			check_ajax_referer( 'kblog_mathjax_latex_save_field', 'security' );
 		}
@@ -158,7 +164,7 @@ EOT;
 		update_option( 'kblog_mathjax_force_load', array_key_exists( 'kblog_mathjax_force_load', $_POST ) ); // input var okay
 
 		if ( array_key_exists( 'kblog_mathjax_latex_inline', $_POST ) && isset( $_POST['kblog_mathjax_latex_inline'] ) && // input var okay
-			in_array( sanitize_text_field( wp_unslash( $_POST['kblog_mathjax_latex_inline'] ) ), array( 'inline', 'display' ), true ) // input var okay
+			in_array( sanitize_text_field( wp_unslash( $_POST['kblog_mathjax_latex_inline'] ) ), [ 'inline', 'display' ], true ) // input var okay
 		) {
 			update_option( 'kblog_mathjax_latex_inline', sanitize_text_field( wp_unslash( $_POST['kblog_mathjax_latex_inline'] ) ) ); // input var okay
 		}
@@ -178,7 +184,7 @@ EOT;
 		}
 	}
 
-	function table_head() {
+	public function table_head() {
 		?>
 		<div class='wrap' id='mathjax-latex-options'>
 			<h2>Mathjax-Latex by Kblog</h2>
@@ -189,7 +195,7 @@ EOT;
 		<?php
 	}
 
-	function table_foot() {
+	public function table_foot() {
 		?>
 		</table>
 
@@ -212,10 +218,10 @@ EOT;
 			});
 		});
 		</script>
-	<?php
+		<?php
 	}
 
-	function admin_table_row( $head, $comment, $input, $input_id ) {
+	public function admin_table_row( $head, $comment, $input, $input_id ) {
 		?>
 			<tr valign="top">
 					<th scope="row">
@@ -226,7 +232,7 @@ EOT;
 						<p class="description"><?php echo wp_kses_post( $comment ); ?></p>
 					</td>
 				</tr>
-<?php
+		<?php
 	}
 } // class
 
