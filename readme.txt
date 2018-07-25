@@ -36,7 +36,7 @@ MathJax-LaTeX is developed on [GitHub](https://github.com/phillord/mathjax-latex
 
 = 1.3.10 =
 
-1. Rename class filex, per PHPCS
+1. Rename class files, per PHPCS
 2. Gracefully handle null values in filter_br_tags_on_math. Thanks to Yang Liu.
 
 = 1.3.9 =
