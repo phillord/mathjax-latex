@@ -237,7 +237,7 @@ class MathJax_Latex {
 		$filtered_content = preg_replace_callback(
 			'/(<math.*>.*<\/math>)/isU',
 			function( $matches ) {
-				return str_replace( array( '<br/>', '<br />', '<br>' ), '', $matches[0] );
+				return str_replace( [ '<br/>', '<br />', '<br>' ], '', $matches[0] );
 			},
 			$content
 		);
