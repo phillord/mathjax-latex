@@ -19,7 +19,7 @@
  * along with this program. If not, see http://www.gnu.org/licenses/.
  */
 
-define( 'MATHJAX_VERSION', '1.3.10' );
+define( 'MATHJAX_VERSION', '1.3.11' );
 
 require_once __DIR__ . '/class-mathjax-latex-admin.php';
 
@@ -237,7 +237,7 @@ class MathJax_Latex {
 		$filtered_content = preg_replace_callback(
 			'/(<math.*>.*<\/math>)/isU',
 			function( $matches ) {
-				return str_replace( array( '<br/>', '<br />', '<br>' ), '', $matches[0] );
+				return str_replace( [ '<br/>', '<br />', '<br>' ], '', $matches[0] );
 			},
 			$content
 		);
