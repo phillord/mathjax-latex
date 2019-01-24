@@ -19,7 +19,7 @@
  * along with this program. If not, see http://www.gnu.org/licenses/.
  */
 
-define( 'MATHJAX_VERSION', '1.3.10' );
+define( 'MATHJAX_VERSION', '1.3.11' );
 
 require_once __DIR__ . '/class-mathjax-latex-admin.php';
 
