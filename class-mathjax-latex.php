@@ -131,7 +131,8 @@ class MathJax_Latex {
 		$shortcode_atts = shortcode_atts(
 			[
 				'syntax' => get_option( 'kblog_mathjax_latex_inline' ),
-			], $atts
+			],
+			$atts
 		);
 
 		if ( 'inline' === $shortcode_atts['syntax'] ) {
