@@ -253,10 +253,10 @@ class MathJax_Latex {
 		global $allowedposttags;
 
 		foreach ( self::$mathml_tags as $tag => $attributes ) {
-			$allowedposttags[ $tag ] = [];
+			$allowedposttags[ $tag ] = []; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.OverrideProhibited
 
 			foreach ( $attributes as $a ) {
-				$allowedposttags[ $tag ][ $a ] = true;
+				$allowedposttags[ $tag ][ $a ] = true; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.OverrideProhibited
 			}
 		}
 	}
