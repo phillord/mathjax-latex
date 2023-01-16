@@ -277,12 +277,3 @@ EOT;
 		<?php
 	}
 } // class
-
-function mathjax_latex_admin_init() {
-	global $mathjax_latex_admin;
-	$mathjax_latex_admin = new MathJax_Latex_Admin();
-}
-
-if ( is_admin() ) {
-	mathjax_latex_admin_init();
-}

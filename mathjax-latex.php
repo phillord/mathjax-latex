@@ -22,3 +22,16 @@ define( 'MATHJAX_PLUGIN_VERSION', '1.3.12' );
 define( 'MATHJAX_JS_VERSION', '2.7.9' );
 
 require_once __DIR__ . '/class-mathjax-latex.php';
+require_once __DIR__ . '/class-mathjax-latex-admin.php';
+
+/**
+ * Instantiate admin configuration class.
+ */
+function mathjax_latex_admin_init() {
+	global $mathjax_latex_admin;
+	$mathjax_latex_admin = new MathJax_Latex_Admin();
+}
+
+if ( is_admin() ) {
+	mathjax_latex_admin_init();
+}
