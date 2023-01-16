@@ -1,6 +1,11 @@
 <?php
+/**
+ * Admin UI functions.
+ *
+ * @package MathJaxLatex
+ */
 
-/*
+/**
  * The contents of this file are subject to the GPL License, Version 3.0.
  *
  * Copyright (C) 2013, Phillip Lord, Newcastle University
@@ -19,8 +24,16 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * Adium UI class.
+ */
 class MathJax_Latex_Admin {
 
+	/**
+	 * Allow HTML tags (for use with KSES).
+	 *
+	 * @var array
+	 */
 	public static $admin_tags = [
 		'input'  => [
 			'type'     => [],
@@ -40,14 +53,23 @@ class MathJax_Latex_Admin {
 		],
 	];
 
+	/**
+	 * Hook for the menu item function.
+	 */
 	public function __construct() {
 		add_action( 'admin_menu', [ $this, 'admin_page_init' ] );
 	}
 
+	/**
+	 * Add the MathJax-LaTeX menu item to the Settings menu.
+	 */
 	public function admin_page_init() {
 		add_options_page( 'MathJax-LaTeX', 'MathJax-LaTeX', 'manage_options', 'kblog-mathjax-latex', [ $this, 'plugin_options_menu' ] );
 	}
 
+	/**
+	 * Render the settings page.
+	 */
 	public function plugin_options_menu() {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_die( __( 'You do not have sufficient permissions to access this page.' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
@@ -55,7 +77,7 @@ class MathJax_Latex_Admin {
 
 		$this->table_head();
 
-		// save options if this is a valid post
+		// Save options if this is a valid post.
 		if ( isset( $_POST['kblog_mathjax_latex_save_field'] ) && // phpcs:ignore WordPress.VIP.SuperGlobalInputUsage.AccessDetected
 			wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['kblog_mathjax_latex_save_field'] ) ), 'kblog_mathjax_latex_save_action' ) // phpcs:ignore WordPress.VIP.SuperGlobalInputUsage.AccessDetected
 		) {
@@ -145,6 +167,9 @@ EOT;
 		$this->table_foot();
 	}
 
+	/**
+	 * List of MathJax configuration options.
+	 */
 	public function config_options() {
 		$options = [
 			'default',
@@ -156,6 +181,9 @@ EOT;
 		return $options;
 	}
 
+	/**
+	 * Save configuration changes to the database.
+	 */
 	public function admin_save() {
 		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 			check_ajax_referer( 'kblog_mathjax_latex_save_field', 'security' );
@@ -184,6 +212,9 @@ EOT;
 		}
 	}
 
+	/**
+	 * Render configuration page header.
+	 */
 	public function table_head() {
 		?>
 		<div class='wrap' id='mathjax-latex-options'>
@@ -195,6 +226,9 @@ EOT;
 		<?php
 	}
 
+	/**
+	 * Render configuration page footer.
+	 */
 	public function table_foot() {
 		?>
 		</table>
@@ -221,6 +255,14 @@ EOT;
 		<?php
 	}
 
+	/**
+	 * Render configuration table row.
+	 *
+	 * @param string $head     Header for the row.
+	 * @param string $comment  Description of the row.
+	 * @param string $input    The input tag (HTML).
+	 * @param string $input_id The input ID (to associate label with input).
+	 */
 	public function admin_table_row( $head, $comment, $input, $input_id ) {
 		?>
 			<tr valign="top">
