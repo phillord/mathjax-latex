@@ -25,10 +25,6 @@
  * along with this program. If not, see http://www.gnu.org/licenses/.
  */
 
-define( 'MATHJAX_VERSION', '1.3.11' );
-
-require_once __DIR__ . '/class-mathjax-latex-admin.php';
-
 /**
  * Math rendering class.
  */
@@ -216,7 +212,7 @@ class MathJax_Latex {
 
 		$mathjax_url = $mathjax_location . '?config=' . get_option( 'kblog_mathjax_config' );
 
-		wp_enqueue_script( 'mathjax', $mathjax_url, false, MATHJAX_VERSION, false );
+		wp_enqueue_script( 'mathjax', $mathjax_url, false, MATHJAX_PLUGIN_VERSION, false );
 
 		$mathjax_config = apply_filters( 'mathjax_config', [] );
 		if ( $mathjax_config ) {
