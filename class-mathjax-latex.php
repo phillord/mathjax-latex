@@ -1,5 +1,11 @@
 <?php
-/*
+/**
+ * Math rendering functions.
+ *
+ * @package MathJaxLatex
+ */
+
+/**
  * The contents of this file are subject to the LGPL License, Version 3.0.
  *
  * Copyright (C) 2010-2013, Phillip Lord, Newcastle University
@@ -19,13 +25,30 @@
  * along with this program. If not, see http://www.gnu.org/licenses/.
  */
 
-define( 'MATHJAX_VERSION', '1.3.11' );
-
-require_once __DIR__ . '/class-mathjax-latex-admin.php';
-
+/**
+ * Math rendering class.
+ */
 class MathJax_Latex {
+
+	/**
+	 * Add the MathJax script to the page.
+	 *
+	 * @var boolean
+	 */
 	public static $add_script;
+
+	/**
+	 * Block the MathJax script on the page.
+	 *
+	 * @var boolean
+	 */
 	public static $block_script;
+
+	/**
+	 * Allow MathML tags (for use with KSES).
+	 *
+	 * @var boolean
+	 */
 	public static $mathml_tags = [
 		'math'           => [ 'class', 'id', 'style', 'dir', 'href', 'mathbackground', 'mathcolor', 'display', 'overflow', 'xmlns' ],
 		'maction'        => [ 'actiontype', 'class', 'id', 'style', 'href', 'mathbackground', 'mathcolor', 'selection' ],
@@ -71,6 +94,9 @@ class MathJax_Latex {
 		'annotation-xml' => [ 'definitionURL', 'encoding', 'cd', 'name', 'src' ],
 	];
 
+	/**
+	 * Register actions and filters.
+	 */
 	public static function init() {
 		register_activation_hook( __FILE__, [ __CLASS__, 'mathjax_install' ] );
 		register_deactivation_hook( __FILE__, [ __CLASS__, 'mathjax_uninstall' ] );
@@ -97,7 +123,9 @@ class MathJax_Latex {
 		add_filter( 'tiny_mce_before_init', [ __CLASS__, 'allow_mathml_tags_in_tinymce' ] );
 	}
 
-	// registers default options
+	/**
+	 * Registers default options.
+	 */
 	public static function mathjax_install() {
 		add_option( 'kblog_mathjax_force_load', false );
 		add_option( 'kblog_mathjax_latex_inline', 'inline' );
@@ -107,6 +135,9 @@ class MathJax_Latex {
 		add_option( 'kblog_mathjax_config', 'default' );
 	}
 
+	/**
+	 * Removes default options.
+	 */
 	public static function mathjax_uninstall() {
 		delete_option( 'kblog_mathjax_force_load' );
 		delete_option( 'kblog_mathjax_latex_inline' );
@@ -116,18 +147,36 @@ class MathJax_Latex {
 		delete_option( 'kblog_mathjax_config' );
 	}
 
-	public static function mathjax_shortcode( $atts, $content ) {
+	/**
+	 * Set flag to load [mathjax] shortcode.
+	 *
+	 * @param array  $atts     Shortcode attributes.
+	 * @param string $content  Shortcode content.
+	 */
+	public static function mathjax_shortcode( $atts, $content ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 		self::$add_script = true;
 	}
 
-	public static function nomathjax_shortcode( $atts, $content ) {
+	/**
+	 * Set flag to load [nomathjax] shortcode.
+	 *
+	 * @param array  $atts     Shortcode attributes.
+	 * @param string $content  Shortcode content.
+	 */
+	public static function nomathjax_shortcode( $atts, $content ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 		self::$block_script = true;
 	}
 
+	/**
+	 * Enable [latex] shortcode.
+	 *
+	 * @param array  $atts     Shortcode attributes.
+	 * @param string $content  Shortcode content.
+	 */
 	public static function latex_shortcode( $atts, $content ) {
 		self::$add_script = true;
 
-		// this gives us an optional "syntax" attribute, which defaults to "inline", but can also be "display"
+		// This gives us an optional "syntax" attribute, which defaults to "inline", but can also be "display".
 		$shortcode_atts = shortcode_atts(
 			[
 				'syntax' => get_option( 'kblog_mathjax_latex_inline' ),
@@ -142,6 +191,9 @@ class MathJax_Latex {
 		}
 	}
 
+	/**
+	 * Enqueue/add the JavaScript to the <head> tag.
+	 */
 	public static function add_script() {
 		if ( ! self::$add_script ) {
 			return;
@@ -151,16 +203,17 @@ class MathJax_Latex {
 			return;
 		}
 
-		// initialise option for existing MathJax-LaTeX users
+		// Initialise option for existing MathJax-LaTeX users.
 		if ( get_option( 'kblog_mathjax_use_cdn' ) || ! get_option( 'kblog_mathjax_custom_location' ) ) {
-			$mathjax_location = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js';
+			$mathjax_location = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/' . MATHJAX_JS_VERSION . '/MathJax.js';
 		} else {
 			$mathjax_location = get_option( 'kblog_mathjax_custom_location' );
 		}
 
-		$mathjax_url = $mathjax_location . '?config=' . get_option( 'kblog_mathjax_config' );
+		$config      = get_option( 'kblog_mathjax_config' ) ?: 'default';
+		$mathjax_url = add_query_arg( 'config', $config, $mathjax_location );
 
-		wp_enqueue_script( 'mathjax', $mathjax_url, false, MATHJAX_VERSION, false );
+		wp_enqueue_script( 'mathjax', $mathjax_url, false, MATHJAX_PLUGIN_VERSION, false );
 
 		$mathjax_config = apply_filters( 'mathjax_config', [] );
 		if ( $mathjax_config ) {
@@ -178,15 +231,20 @@ class MathJax_Latex {
 	 *
 	 * @return string $tag
 	 */
-	public static function script_loader_tag( $tag, $handle = null, $src = null ) {
+	public static function script_loader_tag( $tag, $handle = null, $src = null ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 		if ( 'mathjax' === $handle ) {
-			// replace the <script> tag for the inline script, but not for the <script> tag with src=""
+			// Replace the <script> tag for the inline script, but not for the <script> tag with src="".
 			return str_replace( "<script type='text/javascript'>", "<script type='text/x-mathjax-config'>", $tag );
 		}
 
 		return $tag;
 	}
 
+	/**
+	 * Content filter that replaces inline $latex with [latex] shortcode.
+	 *
+	 * @param string $content    The page content.
+	 */
 	public static function inline_to_shortcode( $content ) {
 		if ( false === strpos( $content, '$latex' ) ) {
 			return $content;
@@ -197,13 +255,15 @@ class MathJax_Latex {
 		return preg_replace_callback( '#\$latex[= ](.*?[^\\\\])\$#', [ __CLASS__, 'inline_to_shortcode_callback' ], $content );
 	}
 
+	/**
+	 * Callback for inline_to_shortcode() regex.
+	 *
+	 * Also support wp-latex syntax. This includes the ability to set background and foreground
+	 * colour, which we can ignore.
+	 *
+	 * @param array $matches    Regular expression matches.
+	 */
 	public static function inline_to_shortcode_callback( $matches ) {
-
-		//
-		// Also support wp-latex syntax. This includes the ability to set background and foreground
-		// colour, which we can ignore.
-		//
-
 		if ( preg_match( '/.+((?:&#038;|&amp;)s=(-?[0-4])).*/i', $matches[1], $s_matches ) ) {
 			$matches[1] = str_replace( $s_matches[1], '', $matches[1] );
 		}
@@ -219,19 +279,27 @@ class MathJax_Latex {
 		return "[latex]{$matches[1]}[/latex]";
 	}
 
-	// add a link to settings on the plugin management page
-	public static function mathjax_settings_link( $links, $file ) {
-		if ( 'mathjax-latex/mathjax-latex.php' === $file && function_exists( 'admin_url' ) ) {
+	/**
+	 * Add a link to settings on the plugin management page.
+	 *
+	 * @param string[] $actions     An array of plugin action links. By default this can include 'activate',
+	 *                              'deactivate', and 'delete'. With Multisite active this can also include
+	 *                              'network_active' and 'network_only' items.
+	 * @param string   $plugin_file Path to the plugin file relative to the plugins directory.
+	 */
+	public static function mathjax_settings_link( $actions, $plugin_file ) {
+		if ( 'mathjax-latex/mathjax-latex.php' === $plugin_file && function_exists( 'admin_url' ) ) {
 			$settings_link = '<a href="' . esc_url( admin_url( 'options-general.php?page=kblog-mathjax-latex' ) ) . '">' . esc_html__( 'Settings' ) . '</a>';
-			array_unshift( $links, $settings_link );
+			array_unshift( $actions, $settings_link );
 		}
-		return $links;
+		return $actions;
 	}
 
 	/**
-	 * Removes the <br /> tags inside math tags
+	 * Removes the <br /> tags inside math tags.
 	 *
-	 * @param $content
+	 * @param string $content  The page content.
+	 *
 	 * @return string without <br /> tags
 	 */
 	public static function filter_br_tags_on_math( $content ) {
@@ -265,6 +333,10 @@ class MathJax_Latex {
 	/**
 	 * Ensure that the MathML tags will not be removed
 	 * by the TinyMCE editor
+	 *
+	 * @param array $options  Array of TinyMCE options.
+	 *
+	 * @return array of TinyMCE options.
 	 */
 	public static function allow_mathml_tags_in_tinymce( $options ) {
 
