@@ -218,7 +218,7 @@ EOT;
 	public function table_head() {
 		?>
 		<div class='wrap' id='mathjax-latex-options'>
-			<h2>Mathjax-Latex by Kblog</h2>
+			<h2>Mathjax-Latex</h2>
 			<form id='mathjaxlatex' name='mathjaxlatex' action='' method='POST'>
 				<?php wp_nonce_field( 'kblog_mathjax_latex_save_action', 'kblog_mathjax_latex_save_field', true ); ?>
 			<table class='form-table'>
