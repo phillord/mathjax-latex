@@ -19,7 +19,7 @@ The MathJax JavaScript can be delivered from your own server, or you can use the
 
 You may embed latex using a variety of different syntaxes. The shortcode (http://codex.wordpress.org/Shortcode_API) syntax is preferred. So `[latex]E=mc^2[/latex]` will work out of the box. This also forces loading of MathJax.
 
-Additionally, you can use native MathJax syntax -- `$$E=mc^2$$` or `\(E=mc^2\)`. However, if this is the only syntax used, the plugin must be explicitly told to load MathJax for the current page. This can be achieved by adding a `[mathjax]` shortcode anywhere in the post. For posts with both `[latex]`x`[/latex]` and $$x$$ syntaxes this is unnecessary.
+Additionally, you can use native MathJax syntax -- `$$E=mc^2$$` or `\(E=mc^2\)`. However, if this is the only syntax used, the plugin must be explicitly told to load MathJax for the current page. This can be achieved by adding a `[mathjax]` shortcode anywhere in the post. For posts with both `[latex]`x`[/latex]` and `$$x$$` syntaxes this is unnecessary.
 
 You can use wp-latex syntax, `$latex E=mc^2$`. Parameters can be specified as with wp-latex but will be ignored. This means that MathJax-LaTeX should be a drop-in replacement for wp-latex. Because this conflicts with wp-latex, this behaviour is blocked when wp-latex is present, and must be explicitly enabled in the settings.
 
