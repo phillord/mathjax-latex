@@ -1,6 +1,14 @@
 {
-	"require-dev": {
-		"automattic/vipwpcs": "^2.0",
-		"dealerdirect/phpcodesniffer-composer-installer": "^0.5.0"
-	}
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
+    },
+    "minimum-stability": "dev",
+    "require": {
+        "dealerdirect/phpcodesniffer-composer-installer": "^1.0"
+    },
+    "require-dev": {
+        "wp-coding-standards/wpcs": "dev-develop"
+    }
 }
