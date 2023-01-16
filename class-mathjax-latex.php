@@ -153,7 +153,7 @@ class MathJax_Latex {
 
 		// initialise option for existing MathJax-LaTeX users
 		if ( get_option( 'kblog_mathjax_use_cdn' ) || ! get_option( 'kblog_mathjax_custom_location' ) ) {
-			$mathjax_location = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js';
+			$mathjax_location = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/' . MATHJAX_JS_VERSION . '/MathJax.js';
 		} else {
 			$mathjax_location = get_option( 'kblog_mathjax_custom_location' );
 		}

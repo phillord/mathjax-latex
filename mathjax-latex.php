@@ -11,5 +11,6 @@
  * Newcastle University.
  * Paul Schreiber (paulschreiber@gmail.com)
 */
+define( 'MATHJAX_JS_VERSION', '2.7.9' );
 
 require_once __DIR__ . '/class-mathjax-latex.php';
