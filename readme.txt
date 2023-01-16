@@ -15,7 +15,7 @@ WordPress (http://www.wordpress.org).
 
 MathJax enables enables rendering of embedded LaTeX or MathML in HTML pages. This plugin adds this functionality to WordPress. The MathJax JavaScript is inject on-demand only to those pages which require it. This ensures that MathJax is not loaded for all pages, which will otherwise slow loading down.
 
-The MathJax JavaScript can be delivered from your own server, or you can use the CDNJS Content Distribution Network (CDN), which is the preferred mechanism as it offers increased speed and stability over hosting the JavaScript and configuring the library yourself.
+The MathJax JavaScript can be delivered from your own server, or you can use the Cloudflare Content Distribution Network (CDN), which is the preferred mechanism as it offers increased speed and stability over hosting the JavaScript and configuring the library yourself.
 
 You may embed latex using a variety of different syntaxes. The shortcode (http://codex.wordpress.org/Shortcode_API) syntax is preferred. So `[latex]E=mc^2[/latex]` will work out of the box. This also forces loading of MathJax.
 
