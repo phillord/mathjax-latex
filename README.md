@@ -3,7 +3,7 @@
 Contributors: philliplord, sjcockell, knowledgeblog, d_swan, paulschreiber, jwenerd
 Tags: mathematics, math, latex, mathml, mathjax, science, res-comms, scholar, academic
 Requires at least: 3.0
-Tested up to: 6.1.1
+Tested up to: 6.6.2
 Stable tag: 1.3.12
 Requires PHP: 7.0.0
 License: GPLv2
@@ -118,10 +118,12 @@ this plugin! Thanks to Jared Wenerd and Paul Schreiber.
 1. Tested against MathJax2.1
 
 ### 1.0
+
 1. Compatibility with MathJax 1.1. Load a default configuration from the MathJax distribution.
 1. Use the MathJax Content Distribution Network to deliver the javascript library. Offers improved performance and stability.
 
 ### 0.2
+
 1. MathJax.js can be loaded form a configurable URL. Defaults to $PLUGIN/MathJax/MathJax.js
 
 == Upgrade Notice ==
@@ -140,6 +142,7 @@ Bug fix: Force load was not correctly applied.
 Security update. All users advised to update. Options will require resetting.
 
 ### 1.1
+
 Documentation updates only. Upgrade for existing users is optional.
 
 ### 1.0
