@@ -3,7 +3,7 @@
 Contributors: philliplord, sjcockell, knowledgeblog, d_swan, paulschreiber, jwenerd
 Tags: mathematics, math, latex, mathml, mathjax, science, res-comms, scholar, academic
 Requires at least: 3.0
-Tested up to: 6.1.1
+Tested up to: 6.6.2
 Stable tag: 1.3.12
 Requires PHP: 7.0.0
 License: GPLv2

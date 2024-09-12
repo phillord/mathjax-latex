@@ -210,7 +210,10 @@ class MathJax_Latex {
 			$mathjax_location = get_option( 'kblog_mathjax_custom_location' );
 		}
 
-		$config      = get_option( 'kblog_mathjax_config' ) ?: 'default';
+		$config = get_option( 'kblog_mathjax_config' );
+		if ( ! $config ) {
+			$config = 'default';
+		}
 		$mathjax_url = add_query_arg( 'config', $config, $mathjax_location );
 
 		wp_enqueue_script( 'mathjax', $mathjax_url, false, MATHJAX_PLUGIN_VERSION, false );
@@ -305,7 +308,7 @@ class MathJax_Latex {
 	public static function filter_br_tags_on_math( $content ) {
 		$filtered_content = preg_replace_callback(
 			'/(<math.*>.*<\/math>)/isU',
-			function( $matches ) {
+			function ( $matches ) {
 				return str_replace( [ '<br/>', '<br />', '<br>' ], '', $matches[0] );
 			},
 			$content
