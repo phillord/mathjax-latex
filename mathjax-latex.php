@@ -8,7 +8,7 @@
 /**
  * Plugin Name: MathJax-LaTeX
  * Description: Transform latex equations in JavaScript using MathJax
- * Version: 1.3.12
+ * Version: 1.3.13
  * Author: Phillip Lord, Simon Cockell, Paul Schreiber
  * Author URI: http://knowledgeblog.org
  *
