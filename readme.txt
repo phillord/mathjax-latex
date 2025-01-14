@@ -1,7 +1,7 @@
 === MathJax-LaTeX ===
 
 Contributors: philliplord, sjcockell, knowledgeblog, d_swan, paulschreiber, jwenerd
-Tags: mathematics, math, latex, mathml, mathjax, science, res-comms, scholar, academic
+Tags: mathematics, latex, mathml, mathjax, science
 Requires at least: 3.0
 Tested up to: 6.7.1
 Stable tag: 1.3.13
