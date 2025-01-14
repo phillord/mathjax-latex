@@ -18,7 +18,7 @@
  * Paul Schreiber (paulschreiber@gmail.com)
  */
 
-define( 'MATHJAX_PLUGIN_VERSION', '1.3.12' );
+define( 'MATHJAX_PLUGIN_VERSION', '1.3.13' );
 define( 'MATHJAX_JS_VERSION', '2.7.9' );
 
 require_once __DIR__ . '/class-mathjax-latex.php';
