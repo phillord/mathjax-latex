@@ -7,7 +7,7 @@ jobs:
       name: WPCS
       runs-on: ubuntu-latest
       steps:
-        - uses: actions/checkout@v5
+        - uses: actions/checkout@v6
         - name: WPCS check
           uses: 10up/wpcs-action@stable
           with:
