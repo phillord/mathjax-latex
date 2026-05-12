@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "dealerdirect/phpcodesniffer-composer-installer",
-            "version": "v1.2.0",
+            "version": "v1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPCSStandards/composer-installer.git",
-                "reference": "845eb62303d2ca9b289ef216356568ccc075ffd1"
+                "reference": "963f0c67bffde0eac41b56be71ac0e8ba132f0bd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPCSStandards/composer-installer/zipball/845eb62303d2ca9b289ef216356568ccc075ffd1",
-                "reference": "845eb62303d2ca9b289ef216356568ccc075ffd1",
+                "url": "https://api.github.com/repos/PHPCSStandards/composer-installer/zipball/963f0c67bffde0eac41b56be71ac0e8ba132f0bd",
+                "reference": "963f0c67bffde0eac41b56be71ac0e8ba132f0bd",
                 "shasum": ""
             },
             "require": {
@@ -100,7 +100,7 @@
                     "type": "thanks_dev"
                 }
             ],
-            "time": "2025-11-11T04:32:07+00:00"
+            "time": "2026-05-06T08:26:05+00:00"
         },
         {
             "name": "squizlabs/php_codesniffer",
@@ -108,12 +108,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPCSStandards/PHP_CodeSniffer.git",
-                "reference": "ddac4e152f1f85571bac3dd6e0f4a8de0e6bcd8a"
+                "reference": "fc6c9f7bf8fc4a45498896782cd1ef32c5924f3d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPCSStandards/PHP_CodeSniffer/zipball/ddac4e152f1f85571bac3dd6e0f4a8de0e6bcd8a",
-                "reference": "ddac4e152f1f85571bac3dd6e0f4a8de0e6bcd8a",
+                "url": "https://api.github.com/repos/PHPCSStandards/PHP_CodeSniffer/zipball/fc6c9f7bf8fc4a45498896782cd1ef32c5924f3d",
+                "reference": "fc6c9f7bf8fc4a45498896782cd1ef32c5924f3d",
                 "shasum": ""
             },
             "require": {
@@ -179,7 +179,7 @@
                     "type": "thanks_dev"
                 }
             ],
-            "time": "2025-11-17T10:58:33+00:00"
+            "time": "2026-04-21T22:11:30+00:00"
         }
     ],
     "packages-dev": [
@@ -428,5 +428,5 @@
     "prefer-lowest": false,
     "platform": {},
     "platform-dev": {},
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.9.0"
 }
