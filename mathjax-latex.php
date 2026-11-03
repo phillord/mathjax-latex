@@ -1,6 +1,6 @@
 <?php
 /**
- * MathJax-LaTeX WordPress pkugin..
+ * MathJax-LaTeX WordPress plugin..
  *
  * @package MathJaxLatex
  */
