@@ -45,6 +45,18 @@ class MathJax_Latex {
 	public static $block_script;
 
 	/**
+	 * MathJax 4 combined components that can be loaded. The first is the default.
+	 *
+	 * @var string[]
+	 */
+	const CONFIGS = [
+		'tex-mml-chtml',
+		'tex-chtml',
+		'tex-mml-svg',
+		'tex-svg',
+	];
+
+	/**
 	 * Allow MathML tags (for use with KSES).
 	 *
 	 * @var boolean
@@ -109,7 +121,6 @@ class MathJax_Latex {
 		add_shortcode( 'nomathjax', [ __CLASS__, 'nomathjax_shortcode' ] );
 		add_shortcode( 'latex', [ __CLASS__, 'latex_shortcode' ] );
 		add_action( 'wp_footer', [ __CLASS__, 'add_script' ] );
-		add_filter( 'script_loader_tag', [ __CLASS__, 'script_loader_tag' ], 10, 3 );
 
 		if ( get_option( 'kblog_mathjax_use_wplatex_syntax' ) ) {
 			add_filter( 'the_content', [ __CLASS__, 'inline_to_shortcode' ] );
@@ -132,7 +143,7 @@ class MathJax_Latex {
 		add_option( 'kblog_mathjax_use_wplatex_syntax', false );
 		add_option( 'kblog_mathjax_use_cdn', true );
 		add_option( 'kblog_mathjax_custom_location', false );
-		add_option( 'kblog_mathjax_config', 'default' );
+		add_option( 'kblog_mathjax_config', self::CONFIGS[0] );
 	}
 
 	/**
@@ -203,46 +214,87 @@ class MathJax_Latex {
 			return;
 		}
 
-		// Initialise option for existing MathJax-LaTeX users.
-		if ( get_option( 'kblog_mathjax_use_cdn' ) || ! get_option( 'kblog_mathjax_custom_location' ) ) {
-			$mathjax_location = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/' . MATHJAX_JS_VERSION . '/MathJax.js';
+		$mathjax_location = get_option( 'kblog_mathjax_custom_location' );
+		$location_path    = strtolower( (string) wp_parse_url( $mathjax_location, PHP_URL_PATH ) );
+		$use_cdn          = get_option( 'kblog_mathjax_use_cdn' ) || ! $mathjax_location;
+
+		if ( $use_cdn ) {
+			$mathjax_url = 'https://cdn.jsdelivr.net/npm/mathjax@' . MATHJAX_JS_VERSION . '/' . self::get_config() . '.js';
+		} elseif ( self::is_legacy_location( $mathjax_location ) ) {
+			$mathjax_url = dirname( strtok( $mathjax_location, '?#' ) ) . '/' . self::get_config() . '.js';
+		} elseif ( str_ends_with( $location_path, '.js' ) ) {
+			// A MathJax 4 component file, e.g. …/tex-svg.js, which takes precedence over the configuration setting.
+			$mathjax_url = $mathjax_location;
 		} else {
-			$mathjax_location = get_option( 'kblog_mathjax_custom_location' );
+			$mathjax_url = untrailingslashit( $mathjax_location ) . '/' . self::get_config() . '.js';
 		}
 
-		$config = get_option( 'kblog_mathjax_config' );
-		if ( ! $config ) {
-			$config = 'default';
-		}
+		wp_enqueue_script(
+			'mathjax',
+			$mathjax_url,
+			[],
+			MATHJAX_JS_VERSION,
+			[
+				'strategy'  => 'async',
+				'in_footer' => true,
+			]
+		);
+
+		$mathjax_config = (array) apply_filters( 'mathjax_config', [] );
 
 		// Always load MathJax's Safe extension, so TeX in untrusted content (e.g. comments) can't create javascript: links.
-		$mathjax_url = add_query_arg( 'config', $config . ',Safe', $mathjax_location );
+		// The casts accept a filter that returns null, an object, or a single loader.load string, instead of a fatal error.
+		$mathjax_config['loader']         = (array) ( $mathjax_config['loader'] ?? [] );
+		$mathjax_config['loader']['load'] = array_values( (array) ( $mathjax_config['loader']['load'] ?? [] ) );
 
-		wp_enqueue_script( 'mathjax', $mathjax_url, false, MATHJAX_PLUGIN_VERSION, false );
+		$mathjax_config['loader']['load'][] = 'ui/safe';
 
-		$mathjax_config = apply_filters( 'mathjax_config', [] );
-		if ( $mathjax_config ) {
-			wp_add_inline_script( 'mathjax', 'MathJax.Hub.Config(' . wp_json_encode( $mathjax_config ) . ');' );
+		// MathJax 4 loads fonts from jsDelivr by default. For a self-hosted copy, load them from the @mathjax
+		// directory that npm installs next to the mathjax one, unless the mathjax_config filter set a path.
+		if ( ! $use_cdn ) {
+			$mathjax_config['loader']['paths']            = (array) ( $mathjax_config['loader']['paths'] ?? [] );
+			$mathjax_config['loader']['paths']['fonts'] ??= '[mathjax]/../@mathjax';
 		}
+
+		$mathjax_json = wp_json_encode( $mathjax_config );
+
+		// If the filtered config can't be encoded (e.g. it contains NAN), still load the Safe extension.
+		if ( false === $mathjax_json ) {
+			$mathjax_json = '{"loader":{"load":["ui/safe"]}}';
+		}
+
+		wp_add_inline_script( 'mathjax', 'window.MathJax = ' . $mathjax_json . ';', 'before' );
 	}
 
+	/**
+	 * Whether a custom location is from before 1.4, when it was the URL of MathJax 2's MathJax.js
+	 * (possibly with ?config=…) rather than a directory.
+	 *
+	 * @param string $location The custom MathJax location.
+	 *
+	 * @return bool
+	 */
+	public static function is_legacy_location( $location ) {
+		return 'mathjax.js' === strtolower( wp_basename( (string) wp_parse_url( (string) $location, PHP_URL_PATH ) ) );
+	}
 
 	/**
-	 * Set the script tag to have type text/x-mathjax-config
+	 * Get the MathJax component to load. MathJax 2 configurations saved before 1.4 map to the default, except TeX-AMS_HTML.
 	 *
-	 * @param string $tag    The `<script>` tag for the enqueued script.
-	 * @param string $handle The script's registered handle.
-	 * @param string $src    The script's source URL.
-	 *
-	 * @return string $tag
+	 * @return string
 	 */
-	public static function script_loader_tag( $tag, $handle = null, $src = null ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
-		if ( 'mathjax' === $handle ) {
-			// Replace the <script> tag for the inline script, but not for the <script> tag with src="".
-			return str_replace( "<script type='text/javascript'>", "<script type='text/x-mathjax-config'>", $tag );
+	public static function get_config() {
+		$config = get_option( 'kblog_mathjax_config' );
+
+		if ( 'TeX-AMS_HTML' === $config ) {
+			return 'tex-chtml';
 		}
 
-		return $tag;
+		if ( in_array( $config, self::CONFIGS, true ) ) {
+			return $config;
+		}
+
+		return self::CONFIGS[0];
 	}
 
 	/**
