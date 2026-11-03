@@ -25,6 +25,10 @@
  * along with this program. If not, see http://www.gnu.org/licenses/.
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * Math rendering class.
  */
@@ -354,7 +358,7 @@ class MathJax_Latex {
 	 */
 	public static function mathjax_settings_link( $actions, $plugin_file ) {
 		if ( 'mathjax-latex/mathjax-latex.php' === $plugin_file && function_exists( 'admin_url' ) ) {
-			$settings_link = '<a href="' . esc_url( admin_url( 'options-general.php?page=kblog-mathjax-latex' ) ) . '">' . esc_html__( 'Settings' ) . '</a>';
+			$settings_link = '<a href="' . esc_url( admin_url( 'options-general.php?page=kblog-mathjax-latex' ) ) . '">' . esc_html__( 'Settings', 'mathjax-latex' ) . '</a>';
 			array_unshift( $actions, $settings_link );
 		}
 		return $actions;

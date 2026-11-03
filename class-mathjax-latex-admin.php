@@ -24,6 +24,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * Adium UI class.
  */
@@ -124,7 +128,7 @@ class MathJax_Latex_Admin {
 	 */
 	public function plugin_options_menu() {
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( __( 'You do not have sufficient permissions to access this page.' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'mathjax-latex' ) );
 		}
 
 		$this->table_head();
@@ -146,15 +150,20 @@ class MathJax_Latex_Admin {
 			''
 		);
 
-		$selected_inline  = get_option( 'kblog_mathjax_latex_inline' ) === 'inline' ? 'selected="true"' : '';
-		$selected_display = get_option( 'kblog_mathjax_latex_inline' ) === 'display' ? 'selected="true"' : '';
+		$latex_inline = get_option( 'kblog_mathjax_latex_inline' );
 
-		$syntax_input = <<<EOT
-<select name="kblog_mathjax_latex_inline" id="kblog_mathjax_latex_inline">
-<option value="inline" $selected_inline>Inline</option>
-<option value="display" $selected_display>Display</option>
-</select>
-EOT;
+		$syntax_input = "<select name='kblog_mathjax_latex_inline' id='kblog_mathjax_latex_inline'>\n";
+
+		$syntax_options = [
+			'inline'  => 'Inline',
+			'display' => 'Display',
+		];
+
+		foreach ( $syntax_options as $value => $label ) {
+			$syntax_input .= "<option value='$value'" . selected( $latex_inline, $value, false ) . ">$label</option>\n";
+		}
+
+		$syntax_input .= '</select>';
 
 		$this->admin_table_row(
 			'Default [latex] syntax attribute.',

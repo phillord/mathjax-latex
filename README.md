@@ -2,11 +2,12 @@
 
 Contributors: philliplord, sjcockell, knowledgeblog, d_swan, paulschreiber, jwenerd
 Tags: mathematics, latex, mathml, mathjax, science
-Requires at least: 3.0
-Tested up to: 6.7.2
+Requires at least: 6.3
+Tested up to: 7.1
 Stable tag: 1.3.13
-Requires PHP: 7.0.0
-License: GPLv2
+Requires PHP: 7.4
+License: GPLv3 or later
+License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
 This plugin enables MathJax (http://www.mathjax.org) functionality for
 WordPress (http://www.wordpress.org).

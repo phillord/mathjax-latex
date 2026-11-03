@@ -11,12 +11,18 @@
  * Version: 1.3.13
  * Author: Phillip Lord, Simon Cockell, Paul Schreiber
  * Author URI: http://knowledgeblog.org
+ * License: GPLv3 or later
+ * License URI: https://www.gnu.org/licenses/gpl-3.0.html
  *
  * Copyright 2010. Phillip Lord (phillip.lord@newcastle.ac.uk)
  * Simon Cockell (s.j.cockell@newcastle.ac.uk)
  * Newcastle University.
  * Paul Schreiber (paulschreiber@gmail.com)
  */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 define( 'MATHJAX_JS_VERSION', '4.1.3' );
 
