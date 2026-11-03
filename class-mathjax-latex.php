@@ -268,6 +268,11 @@ class MathJax_Latex {
 			$mathjax_config['loader']['paths']['fonts'] ??= '[mathjax]/../@mathjax';
 		}
 
+		// Break displayed equations that are wider than their column onto several lines, instead of
+		// overflowing the page (e.g. on phones), unless the mathjax_config filter chose another behaviour.
+		$mathjax_config['output']                      = (array) ( $mathjax_config['output'] ?? [] );
+		$mathjax_config['output']['displayOverflow'] ??= 'linebreak';
+
 		$mathjax_json = wp_json_encode( $mathjax_config );
 
 		// If the filtered config can't be encoded (e.g. it contains NAN), still load the Safe extension.
