@@ -110,8 +110,14 @@ class MathJax_Latex {
 	 * Register actions and filters.
 	 */
 	public static function init() {
-		register_activation_hook( __FILE__, [ __CLASS__, 'mathjax_install' ] );
-		register_deactivation_hook( __FILE__, [ __CLASS__, 'mathjax_uninstall' ] );
+		foreach ( self::defaults() as $option => $default ) {
+			add_filter(
+				"default_option_{$option}",
+				function () use ( $default ) {
+					return $default;
+				}
+			);
+		}
 
 		if ( get_option( 'kblog_mathjax_force_load' ) ) {
 			self::$add_script = true;
@@ -135,27 +141,28 @@ class MathJax_Latex {
 	}
 
 	/**
-	 * Registers default options.
+	 * The plugin's options and their defaults, which get_option() returns until an option is saved.
+	 *
+	 * @return array
 	 */
-	public static function mathjax_install() {
-		add_option( 'kblog_mathjax_force_load', false );
-		add_option( 'kblog_mathjax_latex_inline', 'inline' );
-		add_option( 'kblog_mathjax_use_wplatex_syntax', false );
-		add_option( 'kblog_mathjax_use_cdn', true );
-		add_option( 'kblog_mathjax_custom_location', false );
-		add_option( 'kblog_mathjax_config', self::CONFIGS[0] );
+	public static function defaults() {
+		return [
+			'kblog_mathjax_force_load'         => false,
+			'kblog_mathjax_latex_inline'       => 'inline',
+			'kblog_mathjax_use_wplatex_syntax' => false,
+			'kblog_mathjax_use_cdn'            => true,
+			'kblog_mathjax_custom_location'    => '',
+			'kblog_mathjax_config'             => self::CONFIGS[0],
+		];
 	}
 
 	/**
-	 * Removes default options.
+	 * Removes the plugin's options. Called from uninstall.php.
 	 */
 	public static function mathjax_uninstall() {
-		delete_option( 'kblog_mathjax_force_load' );
-		delete_option( 'kblog_mathjax_latex_inline' );
-		delete_option( 'kblog_mathjax_use_wplatex_syntax' );
-		delete_option( 'kblog_mathjax_use_cdn' );
-		delete_option( 'kblog_mathjax_custom_location' );
-		delete_option( 'kblog_mathjax_config' );
+		foreach ( array_keys( self::defaults() ) as $option ) {
+			delete_option( $option );
+		}
 	}
 
 	/**

@@ -166,7 +166,7 @@ EOT;
 		$wp_latex_disabled         = method_exists( 'WP_LaTeX', 'init' ) ? "disabled='disable'" : '';
 		$wp_latex_disabled_warning = method_exists( 'WP_LaTeX', 'init' ) ? 'Disable wp-latex to use this syntax.' : '';
 
-		$use_wp_latex_syntax = get_option( 'kblog_mathjax_use_wplatex_syntax', false ) ? "checked='true'" : '';
+		$use_wp_latex_syntax = get_option( 'kblog_mathjax_use_wplatex_syntax' ) ? "checked='true'" : '';
 
 		$this->admin_table_row(
 			'Use wp-latex syntax?',
@@ -175,7 +175,7 @@ EOT;
 			'kblog_mathjax_use_wplatex_syntax'
 		);
 
-		$use_cdn = get_option( 'kblog_mathjax_use_cdn', true ) ? 'checked="true"' : '';
+		$use_cdn = get_option( 'kblog_mathjax_use_cdn' ) ? 'checked="true"' : '';
 
 		$this->admin_table_row(
 			'Use MathJax CDN Service?',
@@ -184,8 +184,8 @@ EOT;
 			'use_cdn'
 		);
 
-		$custom_location_disabled = get_option( 'kblog_mathjax_use_cdn', true ) ? 'disabled="disabled"' : '';
-		$custom_location          = "value='" . esc_attr( get_option( 'kblog_mathjax_custom_location', '' ) ) . "'";
+		$custom_location_disabled = get_option( 'kblog_mathjax_use_cdn' ) ? 'disabled="disabled"' : '';
+		$custom_location          = "value='" . esc_attr( get_option( 'kblog_mathjax_custom_location' ) ) . "'";
 
 		$this->admin_table_row(
 			'Custom MathJax location?',
