@@ -2,11 +2,12 @@
 
 Contributors: philliplord, sjcockell, knowledgeblog, d_swan, paulschreiber, jwenerd
 Tags: mathematics, latex, mathml, mathjax, science
-Requires at least: 3.0
-Tested up to: 6.7.2
-Stable tag: 1.3.13
-Requires PHP: 7.0.0
-License: GPLv2
+Requires at least: 6.3
+Tested up to: 7.1
+Stable tag: 1.4
+Requires PHP: 7.4
+License: GPLv3 or later
+License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
 This plugin enables MathJax (http://www.mathjax.org) functionality for
 WordPress (http://www.wordpress.org).
@@ -15,7 +16,7 @@ WordPress (http://www.wordpress.org).
 
 MathJax enables enables rendering of embedded LaTeX or MathML in HTML pages. This plugin adds this functionality to WordPress. The MathJax JavaScript is inject on-demand only to those pages which require it. This ensures that MathJax is not loaded for all pages, which will otherwise slow loading down.
 
-The MathJax JavaScript can be delivered from your own server, or you can use the Cloudflare Content Distribution Network (CDN), which is the preferred mechanism as it offers increased speed and stability over hosting the JavaScript and configuring the library yourself.
+The MathJax JavaScript can be delivered from your own server, or you can use the jsDelivr Content Distribution Network (CDN), which is the preferred mechanism as it offers increased speed and stability over hosting the JavaScript and configuring the library yourself.
 
 You may embed latex using a variety of different syntaxes. The shortcode (http://codex.wordpress.org/Shortcode_API) syntax is preferred. So `[latex]E=mc^2[/latex]` will work out of the box. This also forces loading of MathJax.
 
@@ -33,6 +34,15 @@ MathJax-LaTeX is developed on [GitHub](https://github.com/phillord/mathjax-latex
 1. Activate the plugin through the 'Plugins' menu in WordPress
 
 ## Changelog
+
+### 1.4
+
+1. Security: load MathJax's Safe extension wherever MathJax runs, so TeX in comments can't create javascript: links (CVE-2026-116754). Only site code using the mathjax_config filter can loosen Safe mode's settings.
+1. Use MathJax 4.1.3, loaded asynchronously from jsDelivr.
+1. The MathJax Configuration setting now selects a MathJax 4 component; MathJax 2 settings are mapped automatically.
+1. The custom location setting is now the URL of a MathJax 4 directory or component file. Self-hosted copies load fonts from the @mathjax directory next to it, as installed by npm, instead of jsDelivr.
+1. The mathjax_config filter now takes MathJax 4 configuration (window.MathJax).
+1. Block direct file access and fix Plugin Check issues.
 
 ### 1.3.13
 
@@ -131,6 +141,10 @@ this plugin! Thanks to Jared Wenerd and Paul Schreiber.
 1. MathJax.js can be loaded form a configurable URL. Defaults to $PLUGIN/MathJax/MathJax.js
 
 == Upgrade Notice ==
+
+### 1.4
+
+Security update: fixes a stored XSS (CVE-2026-116754). Upgrades to MathJax 4. If you host MathJax yourself, install MathJax 4 and update the custom location. If you use the mathjax_config filter, update it to MathJax 4 configuration.
 
 ### 1.3.1
 

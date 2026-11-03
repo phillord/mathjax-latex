@@ -24,8 +24,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
- * Adium UI class.
+ * Admin UI class.
  */
 class MathJax_Latex_Admin {
 
@@ -54,17 +58,69 @@ class MathJax_Latex_Admin {
 	];
 
 	/**
+	 * Whether the settings were saved in this request.
+	 *
+	 * @var bool
+	 */
+	private $saved = false;
+
+	/**
+	 * The settings page's hook suffix, which is also its screen ID.
+	 *
+	 * @var string
+	 */
+	private $page_hook = '';
+
+	/**
 	 * Hook for the menu item function.
 	 */
 	public function __construct() {
 		add_action( 'admin_menu', [ $this, 'admin_page_init' ] );
+		add_action( 'admin_notices', [ $this, 'legacy_location_notice' ] );
+	}
+
+	/**
+	 * Warn on the Plugins and settings screens when the custom location still points to MathJax 2,
+	 * which can't load the MathJax 4 components.
+	 */
+	public function legacy_location_notice() {
+		$screen = get_current_screen();
+
+		if ( ! $screen || ! in_array( $screen->id, [ 'plugins', $this->page_hook ], true ) ||
+			! current_user_can( 'manage_options' ) || get_option( 'kblog_mathjax_use_cdn' ) ||
+			! MathJax_Latex::is_legacy_location( get_option( 'kblog_mathjax_custom_location' ) )
+		) {
+			return;
+		}
+
+		printf(
+			'<div class="notice notice-warning"><p>%s <a href="%s">%s</a></p></div>',
+			esc_html__( 'MathJax-LaTeX now uses MathJax 4, but your custom MathJax location points to MathJax 2’s MathJax.js, so math may not render. Install MathJax 4 and change the custom location to its directory, or use the CDN.', 'mathjax-latex' ),
+			esc_url( menu_page_url( 'kblog-mathjax-latex', false ) ),
+			esc_html__( 'Update MathJax-LaTeX settings', 'mathjax-latex' )
+		);
 	}
 
 	/**
 	 * Add the MathJax-LaTeX menu item to the Settings menu.
 	 */
 	public function admin_page_init() {
-		add_options_page( 'MathJax-LaTeX', 'MathJax-LaTeX', 'manage_options', 'kblog-mathjax-latex', [ $this, 'plugin_options_menu' ] );
+		$this->page_hook = (string) add_options_page( 'MathJax-LaTeX', 'MathJax-LaTeX', 'manage_options', 'kblog-mathjax-latex', [ $this, 'plugin_options_menu' ] );
+
+		// Save before admin notices are printed, so they reflect the new settings.
+		add_action( "load-{$this->page_hook}", [ $this, 'maybe_save' ] );
+	}
+
+	/**
+	 * Save options if this is a valid post.
+	 */
+	public function maybe_save() {
+		if ( isset( $_POST['kblog_mathjax_latex_save_field'] ) && // phpcs:ignore WordPress.VIP.SuperGlobalInputUsage.AccessDetected
+			wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['kblog_mathjax_latex_save_field'] ) ), 'kblog_mathjax_latex_save_action' ) // phpcs:ignore WordPress.VIP.SuperGlobalInputUsage.AccessDetected
+		) {
+			$this->admin_save();
+			$this->saved = true;
+		}
 	}
 
 	/**
@@ -72,17 +128,13 @@ class MathJax_Latex_Admin {
 	 */
 	public function plugin_options_menu() {
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( __( 'You do not have sufficient permissions to access this page.' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'mathjax-latex' ) );
 		}
 
 		$this->table_head();
 
-		// Save options if this is a valid post.
-		if ( isset( $_POST['kblog_mathjax_latex_save_field'] ) && // phpcs:ignore WordPress.VIP.SuperGlobalInputUsage.AccessDetected
-			wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['kblog_mathjax_latex_save_field'] ) ), 'kblog_mathjax_latex_save_action' ) // phpcs:ignore WordPress.VIP.SuperGlobalInputUsage.AccessDetected
-		) {
-			echo "<div class='updated settings-error' id='etting-error-settings_updated'><p><strong>Settings saved.</strong></p></div>\n";
-			$this->admin_save();
+		if ( $this->saved ) {
+			echo "<div class='updated settings-error' id='setting-error-settings_updated'><p><strong>Settings saved.</strong></p></div>\n";
 		}
 
 		$checked_force_load = '';
@@ -92,25 +144,30 @@ class MathJax_Latex_Admin {
 		}
 
 		$this->admin_table_row(
-			'Force Load',
-			'Force the MathJax JavaScript to be loaded on every post. This removes the need to use the [mathjax] shortcode.',
+			'Force load',
+			'Load MathJax on every page, so you don’t need the [mathjax] shortcode.',
 			"<input type='checkbox' name='kblog_mathjax_force_load' id='kblog_mathjax_force_load' value='1' $checked_force_load />",
 			''
 		);
 
-		$selected_inline  = get_option( 'kblog_mathjax_latex_inline' ) === 'inline' ? 'selected="true"' : '';
-		$selected_display = get_option( 'kblog_mathjax_latex_inline' ) === 'display' ? 'selected="true"' : '';
+		$latex_inline = get_option( 'kblog_mathjax_latex_inline' );
 
-		$syntax_input = <<<EOT
-<select name="kblog_mathjax_latex_inline" id="kblog_mathjax_latex_inline">
-<option value="inline" $selected_inline>Inline</option>
-<option value="display" $selected_display>Display</option>
-</select>
-EOT;
+		$syntax_input = "<select name='kblog_mathjax_latex_inline' id='kblog_mathjax_latex_inline'>\n";
+
+		$syntax_options = [
+			'inline'  => 'Inline',
+			'display' => 'Display',
+		];
+
+		foreach ( $syntax_options as $value => $label ) {
+			$syntax_input .= "<option value='$value'" . selected( $latex_inline, $value, false ) . ">$label</option>\n";
+		}
+
+		$syntax_input .= '</select>';
 
 		$this->admin_table_row(
-			'Default [latex] syntax attribute.',
-			"By default, the [latex] shortcode renders equations using the MathJax 'inline' syntax.",
+			'Default [latex] syntax',
+			'How [latex] renders equations when the shortcode has no syntax attribute.',
 			$syntax_input,
 			'kblog_mathjax_latex_inline'
 		);
@@ -118,67 +175,52 @@ EOT;
 		$wp_latex_disabled         = method_exists( 'WP_LaTeX', 'init' ) ? "disabled='disable'" : '';
 		$wp_latex_disabled_warning = method_exists( 'WP_LaTeX', 'init' ) ? 'Disable wp-latex to use this syntax.' : '';
 
-		$use_wp_latex_syntax = get_option( 'kblog_mathjax_use_wplatex_syntax', false ) ? "checked='true'" : '';
+		$use_wp_latex_syntax = get_option( 'kblog_mathjax_use_wplatex_syntax' ) ? "checked='true'" : '';
 
 		$this->admin_table_row(
-			'Use wp-latex syntax?',
-			"Allows use of the \$latex$ syntax, but conflicts with wp-latex. $wp_latex_disabled_warning",
+			'Use wp-latex syntax',
+			"Allow the \$latex …$ syntax. This conflicts with the wp-latex plugin. $wp_latex_disabled_warning",
 			"<input type='checkbox' name='kblog_mathjax_use_wplatex_syntax' id='kblog_mathjax_use_wplatex_syntax' $wp_latex_disabled $use_wp_latex_syntax value='1'/>",
 			'kblog_mathjax_use_wplatex_syntax'
 		);
 
-		$use_cdn = get_option( 'kblog_mathjax_use_cdn', true ) ? 'checked="true"' : '';
+		$use_cdn = get_option( 'kblog_mathjax_use_cdn' ) ? 'checked="true"' : '';
 
 		$this->admin_table_row(
-			'Use MathJax CDN Service?',
-			'Allows use of the MathJax hosted content delivery network. By using this, you are agreeing to the  <a href="http://www.mathjax.org/download/mathjax-cdn-terms-of-service/">MathJax CDN Terms of Service</a>.',
+			'Use the CDN',
+			'Load MathJax from the <a href="https://www.jsdelivr.com/">jsDelivr</a> content delivery network. By using it, you agree to the <a href="https://www.jsdelivr.com/terms">jsDelivr Terms of Service</a>.',
 			"<input type='checkbox' name='kblog_mathjax_use_cdn' id='use_cdn' value='1' $use_cdn/>",
 			'use_cdn'
 		);
 
-		$custom_location_disabled = get_option( 'kblog_mathjax_use_cdn', true ) ? 'disabled="disabled"' : '';
-		$custom_location          = "value='" . esc_attr( get_option( 'kblog_mathjax_custom_location', '' ) ) . "'";
+		$custom_location_disabled = get_option( 'kblog_mathjax_use_cdn' ) ? 'disabled="disabled"' : '';
+		$custom_location          = "value='" . esc_attr( get_option( 'kblog_mathjax_custom_location' ) ) . "'";
 
 		$this->admin_table_row(
-			'Custom MathJax location?',
-			'If you are not using the MathJax CDN enter the location of your MathJax script.',
+			'Custom MathJax location',
+			'If you’re not using the CDN, enter the URL of your MathJax 4 directory (the one containing tex-mml-chtml.js), or of one of its component files. The directory must include ui/safe.js, which the plugin always loads to block unsafe links in equations. Fonts load from the @mathjax directory next to it; npm install mathjax@4 sets this up.',
 			"<input type='textbox' name='kblog_mathjax_custom_location' id='kblog_mathjax_custom_location' $custom_location $custom_location_disabled>",
 			'kblog_mathjax_custom_location'
 		);
 
-		$options = $this->config_options();
+		$config = MathJax_Latex::get_config();
 
 		$select_string = "<select name='kblog_mathjax_config' id='kblog_mathjax_config'>\n";
 
-		foreach ( $options as $i ) {
-			$selected       = get_option( 'kblog_mathjax_config', 'default' ) === $i ? "selected='true'" : '';
-			$select_string .= "<option value='$i' " . esc_attr( $selected ) . ">$i</option>\n";
+		foreach ( MathJax_Latex::CONFIGS as $i ) {
+			$select_string .= "<option value='$i'" . selected( $config, $i, false ) . ">$i</option>\n";
 		}
 
 		$select_string .= '</select>';
 
 		$this->admin_table_row(
-			'MathJax Configuration',
-			"See the <a href='http://docs.mathjax.org/en/v1.1-latest/configuration.html#loading'>MathJax documentation</a> for more details.",
+			'MathJax configuration',
+			"The MathJax 4 component to load. See the <a href='https://docs.mathjax.org/en/v4.1/web/components/combined.html'>MathJax documentation</a> for details.",
 			$select_string,
 			'kblog_mathjax_config'
 		);
 
 		$this->table_foot();
-	}
-
-	/**
-	 * List of MathJax configuration options.
-	 */
-	public function config_options() {
-		$options = [
-			'default',
-			'Accessible',
-			'TeX-AMS_HTML',
-			'TeX-AMS-MML_HTMLorMML',
-		];
-
-		return $options;
 	}
 
 	/**
@@ -206,7 +248,7 @@ EOT;
 		}
 
 		if ( array_key_exists( 'kblog_mathjax_config', $_POST ) && isset( $_POST['kblog_mathjax_config'] ) && // phpcs:ignore WordPress.VIP.SuperGlobalInputUsage.AccessDetected
-			in_array( sanitize_text_field( wp_unslash( $_POST['kblog_mathjax_config'] ) ), $this->config_options(), true ) // phpcs:ignore WordPress.VIP.SuperGlobalInputUsage.AccessDetected
+			in_array( sanitize_text_field( wp_unslash( $_POST['kblog_mathjax_config'] ) ), MathJax_Latex::CONFIGS, true ) // phpcs:ignore WordPress.VIP.SuperGlobalInputUsage.AccessDetected
 		) {
 			update_option( 'kblog_mathjax_config', sanitize_text_field( wp_unslash( $_POST['kblog_mathjax_config'] ) ) ); // phpcs:ignore WordPress.VIP.SuperGlobalInputUsage.AccessDetected
 		}
@@ -218,7 +260,7 @@ EOT;
 	public function table_head() {
 		?>
 		<div class='wrap' id='mathjax-latex-options'>
-			<h2>Mathjax-Latex</h2>
+			<h1>MathJax-LaTeX</h1>
 			<form id='mathjaxlatex' name='mathjaxlatex' action='' method='POST'>
 				<?php wp_nonce_field( 'kblog_mathjax_latex_save_action', 'kblog_mathjax_latex_save_field', true ); ?>
 			<table class='form-table'>

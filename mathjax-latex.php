@@ -7,10 +7,12 @@
 
 /**
  * Plugin Name: MathJax-LaTeX
- * Description: Transform latex equations in JavaScript using MathJax
- * Version: 1.3.13
+ * Description: Render LaTeX and MathML equations with MathJax.
+ * Version: 1.4
  * Author: Phillip Lord, Simon Cockell, Paul Schreiber
  * Author URI: http://knowledgeblog.org
+ * License: GPLv3 or later
+ * License URI: https://www.gnu.org/licenses/gpl-3.0.html
  *
  * Copyright 2010. Phillip Lord (phillip.lord@newcastle.ac.uk)
  * Simon Cockell (s.j.cockell@newcastle.ac.uk)
@@ -18,7 +20,11 @@
  * Paul Schreiber (paulschreiber@gmail.com)
  */
 
-define( 'MATHJAX_JS_VERSION', '2.7.9' );
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+define( 'MATHJAX_JS_VERSION', '4.1.3' );
 
 require_once __DIR__ . '/class-mathjax-latex.php';
 require_once __DIR__ . '/class-mathjax-latex-admin.php';
