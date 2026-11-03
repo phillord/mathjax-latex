@@ -202,11 +202,12 @@ class MathJax_Latex {
 			$atts
 		);
 
-		if ( 'inline' === $shortcode_atts['syntax'] ) {
-			return '\(' . $content . '\)';
-		} elseif ( 'display' === $shortcode_atts['syntax'] ) {
+		// Anything other than "display" (e.g. a typo) renders inline rather than dropping the equation.
+		if ( 'display' === strtolower( $shortcode_atts['syntax'] ) ) {
 			return '\[' . $content . '\]';
 		}
+
+		return '\(' . $content . '\)';
 	}
 
 	/**
