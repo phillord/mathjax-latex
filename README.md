@@ -94,6 +94,19 @@ add_filter( 'mathjax_config', function ( $config ) {
 } );
 ```
 
+### Why do long equations wrap onto several lines?
+
+MathJax-LaTeX breaks displayed equations that are wider than the column onto several lines, so they don't run off the screen on phones. Equations that fit aren't affected. To give wide equations their own horizontal scrollbar instead, or to let them overflow as before 1.4.1, set `output.displayOverflow` to `scroll` or `overflow`:
+
+```php
+add_filter( 'mathjax_config', function ( $config ) {
+	$config['output']['displayOverflow'] = 'scroll';
+	return $config;
+} );
+```
+
+MathJax also accepts `scale`, `truncate` and `elide`; see the [MathJax output options](https://docs.mathjax.org/en/latest/options/output/index.html).
+
 ## Changelog
 
 ### 1.4
