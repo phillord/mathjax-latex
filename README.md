@@ -33,6 +33,67 @@ MathJax-LaTeX is developed on [GitHub](https://github.com/phillord/mathjax-latex
 1. Unzip the downloaded .zip archive to the `/wp-content/plugins/` directory
 1. Activate the plugin through the 'Plugins' menu in WordPress
 
+## Frequently Asked Questions
+
+### How do I configure MathJax?
+
+Use the `mathjax_config` filter. It receives an array of [MathJax 4 configuration options](https://docs.mathjax.org/en/latest/options/index.html), which the plugin outputs as `window.MathJax` before MathJax loads. Add your settings to the array you're given and return it. Don't return a new array, since the plugin adds its own settings to it.
+
+```php
+add_filter( 'mathjax_config', function ( $config ) {
+	$config['tex']['tags'] = 'ams';
+	return $config;
+} );
+```
+
+The plugin always loads MathJax's Safe extension after the filter runs, so a filter can't remove it.
+
+Before 1.4, the filter took MathJax 2 configuration (`MathJax.Hub.Config`). Those settings don't work with MathJax 4; see the [MathJax 4 documentation](https://docs.mathjax.org/en/latest/upgrading/v2.html) for the equivalents.
+
+### How do I number equations?
+
+Set `tex.tags` to `ams` to number equations in environments such as `equation` and `align`, or to `all` to number every displayed equation:
+
+```php
+add_filter( 'mathjax_config', function ( $config ) {
+	$config['tex']['tags'] = 'ams';
+	return $config;
+} );
+```
+
+`\label{…}` and `\eqref{…}` then work as in LaTeX.
+
+### Can I use single dollar signs for inline math?
+
+Yes, by adding them to `tex.inlineMath`:
+
+```php
+add_filter( 'mathjax_config', function ( $config ) {
+	$config['tex']['inlineMath'] = [ [ '$', '$' ], [ '\\(', '\\)' ] ];
+	return $config;
+} );
+```
+
+A literal dollar sign then needs to be written as `\$`.
+
+### How do I use a TeX extension?
+
+Many extensions load automatically when you use one of their macros, e.g. `\ce{H2O}` loads `mhchem`. For others, `\require` them in the post, once per page before their first use:
+
+```latex
+\(\require{units}\nicefrac{1}{2}\)
+```
+
+To load an extension on every page, use the `mathjax_config` filter:
+
+```php
+add_filter( 'mathjax_config', function ( $config ) {
+	$config['loader']['load'][]         = '[tex]/units';
+	$config['tex']['packages']['[+]'][] = 'units';
+	return $config;
+} );
+```
+
 ## Changelog
 
 ### 1.4
@@ -41,7 +102,7 @@ MathJax-LaTeX is developed on [GitHub](https://github.com/phillord/mathjax-latex
 1. Use MathJax 4.1.3, loaded asynchronously from jsDelivr.
 1. The MathJax Configuration setting now selects a MathJax 4 component; MathJax 2 settings are mapped automatically.
 1. The custom location setting is now the URL of a MathJax 4 directory or component file. Self-hosted copies load fonts from the @mathjax directory next to it, as installed by npm, instead of jsDelivr.
-1. The mathjax_config filter now takes MathJax 4 configuration (window.MathJax).
+1. The mathjax_config filter now takes MathJax 4 configuration (window.MathJax); see the FAQ for examples.
 1. Block direct file access and fix Plugin Check issues.
 
 ### 1.3.13
