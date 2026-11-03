@@ -29,7 +29,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Adium UI class.
+ * Admin UI class.
  */
 class MathJax_Latex_Admin {
 
@@ -134,7 +134,7 @@ class MathJax_Latex_Admin {
 		$this->table_head();
 
 		if ( $this->saved ) {
-			echo "<div class='updated settings-error' id='etting-error-settings_updated'><p><strong>Settings saved.</strong></p></div>\n";
+			echo "<div class='updated settings-error' id='setting-error-settings_updated'><p><strong>Settings saved.</strong></p></div>\n";
 		}
 
 		$checked_force_load = '';
@@ -144,8 +144,8 @@ class MathJax_Latex_Admin {
 		}
 
 		$this->admin_table_row(
-			'Force Load',
-			'Force the MathJax JavaScript to be loaded on every post. This removes the need to use the [mathjax] shortcode.',
+			'Force load',
+			'Load MathJax on every page, so you don’t need the [mathjax] shortcode.',
 			"<input type='checkbox' name='kblog_mathjax_force_load' id='kblog_mathjax_force_load' value='1' $checked_force_load />",
 			''
 		);
@@ -166,8 +166,8 @@ class MathJax_Latex_Admin {
 		$syntax_input .= '</select>';
 
 		$this->admin_table_row(
-			'Default [latex] syntax attribute.',
-			"By default, the [latex] shortcode renders equations using the MathJax 'inline' syntax.",
+			'Default [latex] syntax',
+			'How [latex] renders equations when the shortcode has no syntax attribute.',
 			$syntax_input,
 			'kblog_mathjax_latex_inline'
 		);
@@ -178,8 +178,8 @@ class MathJax_Latex_Admin {
 		$use_wp_latex_syntax = get_option( 'kblog_mathjax_use_wplatex_syntax' ) ? "checked='true'" : '';
 
 		$this->admin_table_row(
-			'Use wp-latex syntax?',
-			"Allows use of the \$latex$ syntax, but conflicts with wp-latex. $wp_latex_disabled_warning",
+			'Use wp-latex syntax',
+			"Allow the \$latex …$ syntax. This conflicts with the wp-latex plugin. $wp_latex_disabled_warning",
 			"<input type='checkbox' name='kblog_mathjax_use_wplatex_syntax' id='kblog_mathjax_use_wplatex_syntax' $wp_latex_disabled $use_wp_latex_syntax value='1'/>",
 			'kblog_mathjax_use_wplatex_syntax'
 		);
@@ -187,7 +187,7 @@ class MathJax_Latex_Admin {
 		$use_cdn = get_option( 'kblog_mathjax_use_cdn' ) ? 'checked="true"' : '';
 
 		$this->admin_table_row(
-			'Use MathJax CDN Service?',
+			'Use the CDN',
 			'Load MathJax from the <a href="https://www.jsdelivr.com/">jsDelivr</a> content delivery network. By using it, you agree to the <a href="https://www.jsdelivr.com/terms">jsDelivr Terms of Service</a>.',
 			"<input type='checkbox' name='kblog_mathjax_use_cdn' id='use_cdn' value='1' $use_cdn/>",
 			'use_cdn'
@@ -197,7 +197,7 @@ class MathJax_Latex_Admin {
 		$custom_location          = "value='" . esc_attr( get_option( 'kblog_mathjax_custom_location' ) ) . "'";
 
 		$this->admin_table_row(
-			'Custom MathJax location?',
+			'Custom MathJax location',
 			'If you’re not using the CDN, enter the URL of your MathJax 4 directory (the one containing tex-mml-chtml.js), or of one of its component files. The directory must include ui/safe.js, which the plugin always loads to block unsafe links in equations. Fonts load from the @mathjax directory next to it; npm install mathjax@4 sets this up.',
 			"<input type='textbox' name='kblog_mathjax_custom_location' id='kblog_mathjax_custom_location' $custom_location $custom_location_disabled>",
 			'kblog_mathjax_custom_location'
@@ -214,7 +214,7 @@ class MathJax_Latex_Admin {
 		$select_string .= '</select>';
 
 		$this->admin_table_row(
-			'MathJax Configuration',
+			'MathJax configuration',
 			"The MathJax 4 component to load. See the <a href='https://docs.mathjax.org/en/v4.1/web/components/combined.html'>MathJax documentation</a> for details.",
 			$select_string,
 			'kblog_mathjax_config'
@@ -260,7 +260,7 @@ class MathJax_Latex_Admin {
 	public function table_head() {
 		?>
 		<div class='wrap' id='mathjax-latex-options'>
-			<h2>Mathjax-Latex</h2>
+			<h1>MathJax-LaTeX</h1>
 			<form id='mathjaxlatex' name='mathjaxlatex' action='' method='POST'>
 				<?php wp_nonce_field( 'kblog_mathjax_latex_save_action', 'kblog_mathjax_latex_save_field', true ); ?>
 			<table class='form-table'>
