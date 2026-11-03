@@ -252,32 +252,32 @@ class MathJax_Latex {
 			]
 		);
 
-		$mathjax_config = (array) apply_filters( 'mathjax_config', [] );
+		// Settings the plugin adds unless the mathjax_config filter sets them. Break displayed equations that are
+		// wider than their column onto several lines, instead of overflowing the page (e.g. on phones). MathJax 4
+		// loads fonts from jsDelivr by default, so for a self-hosted copy, load them from the @mathjax directory
+		// that npm installs next to the mathjax one.
+		$defaults = [ 'output' => [ 'displayOverflow' => 'linebreak' ] ];
+
+		if ( ! $use_cdn ) {
+			$defaults['loader']['paths']['fonts'] = '[mathjax]/../@mathjax';
+		}
 
 		// Always load MathJax's Safe extension, so TeX in untrusted content (e.g. comments) can't create javascript: links.
+		$safe = [ 'loader' => [ 'load' => [ 'ui/safe' ] ] ];
+
+		$mathjax_config = (array) apply_filters( 'mathjax_config', [] );
+
 		// The casts accept a filter that returns null, an object, or a single loader.load string, instead of a fatal error.
 		$mathjax_config['loader']         = (array) ( $mathjax_config['loader'] ?? [] );
 		$mathjax_config['loader']['load'] = array_values( (array) ( $mathjax_config['loader']['load'] ?? [] ) );
 
 		$mathjax_config['loader']['load'][] = 'ui/safe';
 
-		// MathJax 4 loads fonts from jsDelivr by default. For a self-hosted copy, load them from the @mathjax
-		// directory that npm installs next to the mathjax one, unless the mathjax_config filter set a path.
-		if ( ! $use_cdn ) {
-			$mathjax_config['loader']['paths']            = (array) ( $mathjax_config['loader']['paths'] ?? [] );
-			$mathjax_config['loader']['paths']['fonts'] ??= '[mathjax]/../@mathjax';
-		}
+		$mathjax_json = wp_json_encode( array_replace_recursive( $defaults, $mathjax_config ) );
 
-		// Break displayed equations that are wider than their column onto several lines, instead of
-		// overflowing the page (e.g. on phones), unless the mathjax_config filter chose another behaviour.
-		$mathjax_config['output']                      = (array) ( $mathjax_config['output'] ?? [] );
-		$mathjax_config['output']['displayOverflow'] ??= 'linebreak';
-
-		$mathjax_json = wp_json_encode( $mathjax_config );
-
-		// If the filtered config can't be encoded (e.g. it contains NAN), still load the Safe extension.
+		// If the filtered config can't be encoded (e.g. it contains NAN), use the plugin's own settings.
 		if ( false === $mathjax_json ) {
-			$mathjax_json = '{"loader":{"load":["ui/safe"]}}';
+			$mathjax_json = wp_json_encode( array_merge_recursive( $defaults, $safe ) );
 		}
 
 		wp_add_inline_script( 'mathjax', 'window.MathJax = ' . $mathjax_json . ';', 'before' );
