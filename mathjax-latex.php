@@ -8,7 +8,7 @@
 /**
  * Plugin Name: MathJax-LaTeX
  * Description: Render LaTeX and MathML equations with MathJax.
- * Version: 1.4
+ * Version: 1.4.1
  * Author: Phillip Lord, Simon Cockell, Paul Schreiber
  * Author URI: http://knowledgeblog.org
  * License: GPLv3 or later

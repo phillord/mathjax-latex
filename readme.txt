@@ -4,7 +4,7 @@ Contributors: philliplord, sjcockell, knowledgeblog, d_swan, paulschreiber, jwen
 Tags: mathematics, latex, mathml, mathjax, science
 Requires at least: 6.3
 Tested up to: 7.1
-Stable tag: 1.4
+Stable tag: 1.4.1
 Requires PHP: 7.4
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html

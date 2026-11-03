@@ -4,7 +4,7 @@ Contributors: philliplord, sjcockell, knowledgeblog, d_swan, paulschreiber, jwen
 Tags: mathematics, latex, mathml, mathjax, science
 Requires at least: 6.3
 Tested up to: 7.1
-Stable tag: 1.4
+Stable tag: 1.4.1
 Requires PHP: 7.4
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -108,6 +108,11 @@ add_filter( 'mathjax_config', function ( $config ) {
 MathJax also accepts `scale`, `truncate` and `elide`; see the [MathJax output options](https://docs.mathjax.org/en/latest/options/output/index.html).
 
 ## Changelog
+
+### 1.4.1
+
+1. Wide displayed equations now wrap onto several lines instead of running off the page, e.g. on phones. See the FAQ to give them a scrollbar or restore the old behaviour.
+1. If a mathjax_config filter returns settings that can't be encoded, keep the plugin's defaults (including the self-hosted fonts path) as well as Safe mode.
 
 ### 1.4
 
@@ -215,6 +220,10 @@ this plugin! Thanks to Jared Wenerd and Paul Schreiber.
 1. MathJax.js can be loaded form a configurable URL. Defaults to $PLUGIN/MathJax/MathJax.js
 
 == Upgrade Notice ==
+
+### 1.4.1
+
+Wide displayed equations now wrap onto several lines instead of running off the page. See the FAQ to change this.
 
 ### 1.4
 
