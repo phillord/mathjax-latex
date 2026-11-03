@@ -46,6 +46,7 @@ class MathJax_Latex_Admin {
 			'disabled' => [],
 			'value'    => [],
 			'checked'  => [],
+			'class'    => [],
 		],
 		'select' => [
 			'name' => [],
@@ -199,7 +200,7 @@ class MathJax_Latex_Admin {
 		$this->admin_table_row(
 			'Custom MathJax location',
 			'If you’re not using the CDN, enter the URL of your MathJax 4 directory (the one containing tex-mml-chtml.js), or of one of its component files. The directory must include ui/safe.js, which the plugin always loads to block unsafe links in equations. Fonts load from the @mathjax directory next to it; npm install mathjax@4 sets this up.',
-			"<input type='textbox' name='kblog_mathjax_custom_location' id='kblog_mathjax_custom_location' $custom_location $custom_location_disabled>",
+			"<input type='text' class='large-text' name='kblog_mathjax_custom_location' id='kblog_mathjax_custom_location' $custom_location $custom_location_disabled>",
 			'kblog_mathjax_custom_location'
 		);
 
