@@ -214,7 +214,9 @@ class MathJax_Latex {
 		if ( ! $config ) {
 			$config = 'default';
 		}
-		$mathjax_url = add_query_arg( 'config', $config, $mathjax_location );
+
+		// Always load MathJax's Safe extension, so TeX in untrusted content (e.g. comments) can't create javascript: links.
+		$mathjax_url = add_query_arg( 'config', $config . ',Safe', $mathjax_location );
 
 		wp_enqueue_script( 'mathjax', $mathjax_url, false, MATHJAX_PLUGIN_VERSION, false );
 
