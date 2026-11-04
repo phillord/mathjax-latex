@@ -1,12 +1,18 @@
 name: Auto approve
 
-on: pull_request_target
+on:
+  pull_request_target:
 
 jobs:
   auto-approve:
+    name: Auto approve
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
-    if: github.actor == 'dependabot[bot]'
+    # Both the PR's author and whoever triggered this run (e.g. pushed the latest
+    # commit) must be Dependabot, so a human pushing onto a Dependabot branch
+    # doesn't get an automatic approval.
+    if: github.event.pull_request.user.login == 'dependabot[bot]' && github.actor == 'dependabot[bot]'
     steps:
-      - uses: hmarr/auto-approve-action@v4
+      - name: Approve Dependabot pull request
+        uses: hmarr/auto-approve-action@f0939ea97e9205ef24d872e76833fa908a770363 # v4.0.0
