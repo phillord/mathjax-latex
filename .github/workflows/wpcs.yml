@@ -4,13 +4,13 @@ on: pull_request
 
 jobs:
   phpcs:
-      name: WPCS
-      runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v7
-        - name: WPCS check
-          uses: 10up/wpcs-action@stable
-          with:
-            enable_warnings: true
-            standard: 'WordPress-VIP-Go'
-            use_local_config: true
+    name: WPCS
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: WPCS check
+        uses: 10up/wpcs-action@39f1a9eb6139795e6798d11b51eeecf5a9678ccc # v2.1.0
+        with:
+          enable_warnings: true
+          use_local_config: true
