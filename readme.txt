@@ -6,7 +6,7 @@ Requires at least: 6.3
 Tested up to: 7.1
 Stable tag: 1.4.1
 Requires PHP: 7.4
-License: GPLv3 or later
+License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
 This plugin enables MathJax (http://www.mathjax.org) functionality for
@@ -239,4 +239,4 @@ CDN for javascript delivery. Upgrading is strongly recommended.
 
 == Copyright ==
 
-This plugin is copyright Phillip Lord, Newcastle University and is licensed under GPLv2.
+This plugin is copyright Phillip Lord, Newcastle University and is licensed under GPLv3.
