@@ -1,14 +1,20 @@
 {
+    "name": "phillord/mathjax-latex",
+    "description": "Render LaTeX and MathML equations with MathJax.",
+    "type": "wordpress-plugin",
+    "license": "GPL-3.0-or-later",
+    "require-dev": {
+        "dealerdirect/phpcodesniffer-composer-installer": "^1.2",
+        "wp-coding-standards/wpcs": "^3.4"
+    },
     "config": {
         "allow-plugins": {
             "dealerdirect/phpcodesniffer-composer-installer": true
-        }
+        },
+        "sort-packages": true
     },
-    "minimum-stability": "dev",
-    "require": {
-        "dealerdirect/phpcodesniffer-composer-installer": "^1.0"
-    },
-    "require-dev": {
-        "wp-coding-standards/wpcs": "dev-develop"
+    "scripts": {
+        "lint": "phpcs",
+        "lint:fix": "phpcbf"
     }
 }
